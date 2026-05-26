@@ -3,31 +3,31 @@ import { persist } from 'zustand/middleware';
 
 interface AuthState {
   token: string | null;
-  isAuthenticated: boolean;
   setToken: (token: string) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
+interface AuthDerived extends AuthState {
+  isAuthenticated: boolean;
+}
+
+export const useAuthStore = create<AuthDerived>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
-      isAuthenticated: false,
+      get isAuthenticated() {
+        return get().token !== null;
+      },
       setToken: (token) => {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('access_token', token);
-        }
-        set({ token, isAuthenticated: true });
+        set({ token });
       },
       logout: () => {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('access_token');
-        }
-        set({ token: null, isAuthenticated: false });
+        set({ token: null });
       },
     }),
     {
       name: 'auth-storage',
+      partialize: (state) => ({ token: state.token }),
     }
   )
 );
