@@ -3,6 +3,7 @@ package com.scheduling.modules.auth.service;
 import com.scheduling.base.service.BaseService;
 import com.scheduling.modules.auth.dto.LoginDTO;
 import com.scheduling.modules.auth.dto.TokenResponseDTO;
+import com.scheduling.modules.auth.model.RefreshToken;
 import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.auth.repository.UserRepository;
 import com.scheduling.shared.exception.AppException;
@@ -20,6 +21,7 @@ public class LoginService implements BaseService<LoginDTO, TokenResponseDTO> {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public TokenResponseDTO execute(LoginDTO input) {
@@ -38,11 +40,11 @@ public class LoginService implements BaseService<LoginDTO, TokenResponseDTO> {
                 .orElseThrow(() -> new AppException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
         String jwtToken = jwtService.generateToken(user);
-        // Refresh token simplificado por enquanto, usando o mesmo ou gerando com maior validade (pode ser implementado depois o RefreshToken Service completo)
-        
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+
         return TokenResponseDTO.builder()
                 .accessToken(jwtToken)
-                .refreshToken("to-be-implemented") 
+                .refreshToken(refreshToken.getToken())
                 .build();
     }
 }

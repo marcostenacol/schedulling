@@ -9,6 +9,7 @@ import com.scheduling.modules.schedule.dto.CreateScheduleDTO;
 import com.scheduling.modules.schedule.dto.ScheduleResponseDTO;
 import com.scheduling.modules.schedule.model.Schedule;
 import com.scheduling.modules.schedule.model.ScheduleStatus;
+import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.modules.schedule.repository.ScheduleRepository;
 import com.scheduling.modules.service.model.ServiceOffered;
 import com.scheduling.modules.service.repository.ServiceOfferedRepository;
@@ -32,6 +33,7 @@ public class CreateScheduleService implements BaseService<CreateScheduleService.
     private final UserRepository userRepository;
     private final AvailabilityRepository availabilityRepository;
     private final AvailabilityBlockRepository blockRepository;
+    private final ProfileRepository profileRepository;
 
     @Data
     @AllArgsConstructor
@@ -76,12 +78,19 @@ public class CreateScheduleService implements BaseService<CreateScheduleService.
 
         Schedule saved = scheduleRepository.save(schedule);
 
+        String clientName = profileRepository.findByUserId(saved.getClient().getId())
+                .map(p -> p.getName())
+                .orElse(saved.getClient().getEmail());
+        String providerName = profileRepository.findByUserId(saved.getProvider().getId())
+                .map(p -> p.getName())
+                .orElse(saved.getProvider().getEmail());
+
         return ScheduleResponseDTO.builder()
                 .id(saved.getId())
                 .clientId(saved.getClient().getId())
-                .clientName(saved.getClient().getEmail()) // Idealmente usar o Profile name
+                .clientName(clientName)
                 .providerId(saved.getProvider().getId())
-                .providerName(saved.getProvider().getEmail())
+                .providerName(providerName)
                 .serviceName(saved.getService().getName())
                 .startDateTime(saved.getStartDateTime())
                 .endDateTime(saved.getEndDateTime())
