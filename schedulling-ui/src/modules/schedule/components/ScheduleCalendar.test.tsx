@@ -7,18 +7,19 @@ import { ScheduleResponseDTO, ScheduleStatus } from '../dtos/schedule.dto';
 // react-big-calendar reads layout APIs jsdom doesn't implement; stub the
 // minimal set it needs so the component can mount without a real browser.
 beforeAll(() => {
-  (window as any).matchMedia =
-    (window as any).matchMedia ||
-    ((query: string) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }));
+  window.matchMedia =
+    window.matchMedia ||
+    ((query: string) =>
+      ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }) as unknown as MediaQueryList);
 });
 
 const schedule: ScheduleResponseDTO = {

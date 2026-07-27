@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { LoginForm } from './LoginForm';
 import { authApi } from '../api/auth.api';
 import { useAuthStore } from '../store/auth.store';
+import { TokenResponseDTO } from '../dtos/auth.dto';
 
 const pushMock = vi.fn();
 
@@ -42,7 +43,7 @@ describe('LoginForm', () => {
     vi.mocked(authApi.login).mockResolvedValue({
       success: true,
       message: 'ok',
-      data: { accessToken: 'fake-token' } as any,
+      data: { accessToken: 'fake-token', refreshToken: 'fake-refresh' } as TokenResponseDTO,
     });
 
     const { container } = render(<LoginForm />);
