@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace('/dashboard/schedule');
+      router.replace('/schedule');
     } else {
       router.replace('/login');
     }

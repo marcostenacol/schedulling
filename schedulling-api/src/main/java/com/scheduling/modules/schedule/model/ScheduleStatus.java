@@ -1,8 +1,8 @@
 package com.scheduling.modules.schedule.model;
 
 public enum ScheduleStatus {
-    PENDING,
-    CONFIRMED,
-    CANCELLED,
-    COMPLETED
+  PENDING,
+  CONFIRMED,
+  CANCELLED,
+  COMPLETED
 }

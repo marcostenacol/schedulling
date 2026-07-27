@@ -1,5 +1,9 @@
 package com.scheduling.modules.auth.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.scheduling.modules.auth.dto.RegisterDTO;
 import com.scheduling.modules.auth.enums.RoleEnum;
 import com.scheduling.modules.auth.model.Role;
@@ -9,6 +13,7 @@ import com.scheduling.modules.auth.repository.UserRepository;
 import com.scheduling.modules.profile.model.Profile;
 import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.shared.exception.AppException;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,90 +24,79 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class RegisterServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-    @Mock
-    private RoleRepository roleRepository;
+  @Mock private RoleRepository roleRepository;
 
-    @Mock
-    private ProfileRepository profileRepository;
+  @Mock private ProfileRepository profileRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+  @Mock private PasswordEncoder passwordEncoder;
 
-    @InjectMocks
-    private RegisterService registerService;
+  @InjectMocks private RegisterService registerService;
 
-    private RegisterDTO registerDTO;
-    private Role role;
+  private RegisterDTO registerDTO;
+  private Role role;
 
-    @BeforeEach
-    void setUp() {
-        registerDTO = new RegisterDTO();
-        registerDTO.setEmail("test@example.com");
-        registerDTO.setPassword("password123");
-        registerDTO.setRole(RoleEnum.ROLE_CLIENT);
+  @BeforeEach
+  void setUp() {
+    registerDTO = new RegisterDTO();
+    registerDTO.setEmail("test@example.com");
+    registerDTO.setPassword("password123");
+    registerDTO.setRole(RoleEnum.ROLE_CLIENT);
 
-        role = Role.builder()
-                .name(RoleEnum.ROLE_CLIENT)
-                .build();
-    }
+    role = Role.builder().name(RoleEnum.ROLE_CLIENT).build();
+  }
 
-    @Test
-    @DisplayName("Deve registrar um usuário com sucesso")
-    void shouldRegisterUserSuccessfully() {
-        when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(false);
-        when(roleRepository.findByName(registerDTO.getRole())).thenReturn(Optional.of(role));
-        when(passwordEncoder.encode(registerDTO.getPassword())).thenReturn("encodedPassword");
-        
-        User user = User.builder().email(registerDTO.getEmail()).build();
-        when(userRepository.save(any(User.class))).thenReturn(user);
+  @Test
+  @DisplayName("Deve registrar um usuário com sucesso")
+  void shouldRegisterUserSuccessfully() {
+    when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(false);
+    when(roleRepository.findByName(registerDTO.getRole())).thenReturn(Optional.of(role));
+    when(passwordEncoder.encode(registerDTO.getPassword())).thenReturn("encodedPassword");
 
-        assertDoesNotThrow(() -> registerService.execute(registerDTO));
+    User user = User.builder().email(registerDTO.getEmail()).build();
+    when(userRepository.save(any(User.class))).thenReturn(user);
 
-        verify(userRepository, times(1)).existsByEmail(registerDTO.getEmail());
-        verify(roleRepository, times(1)).findByName(registerDTO.getRole());
-        verify(passwordEncoder, times(1)).encode(registerDTO.getPassword());
-        verify(userRepository, times(1)).save(any(User.class));
-        verify(profileRepository, times(1)).save(any(Profile.class));
-    }
+    assertDoesNotThrow(() -> registerService.execute(registerDTO));
 
-    @Test
-    @DisplayName("Deve lançar exceção quando o email já existe")
-    void shouldThrowExceptionWhenEmailExists() {
-        when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(true);
+    verify(userRepository, times(1)).existsByEmail(registerDTO.getEmail());
+    verify(roleRepository, times(1)).findByName(registerDTO.getRole());
+    verify(passwordEncoder, times(1)).encode(registerDTO.getPassword());
+    verify(userRepository, times(1)).save(any(User.class));
+    verify(profileRepository, times(1)).save(any(Profile.class));
+  }
 
-        AppException exception = assertThrows(AppException.class, () -> registerService.execute(registerDTO));
+  @Test
+  @DisplayName("Deve lançar exceção quando o email já existe")
+  void shouldThrowExceptionWhenEmailExists() {
+    when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(true);
 
-        assertEquals("Email já cadastrado no sistema", exception.getMessage());
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    AppException exception =
+        assertThrows(AppException.class, () -> registerService.execute(registerDTO));
 
-        verify(userRepository, times(1)).existsByEmail(registerDTO.getEmail());
-        verify(userRepository, never()).save(any(User.class));
-    }
+    assertEquals("Email já cadastrado no sistema", exception.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
-    @Test
-    @DisplayName("Deve lançar exceção quando a role não é encontrada")
-    void shouldThrowExceptionWhenRoleNotFound() {
-        when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(false);
-        when(roleRepository.findByName(registerDTO.getRole())).thenReturn(Optional.empty());
+    verify(userRepository, times(1)).existsByEmail(registerDTO.getEmail());
+    verify(userRepository, never()).save(any(User.class));
+  }
 
-        AppException exception = assertThrows(AppException.class, () -> registerService.execute(registerDTO));
+  @Test
+  @DisplayName("Deve lançar exceção quando a role não é encontrada")
+  void shouldThrowExceptionWhenRoleNotFound() {
+    when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(false);
+    when(roleRepository.findByName(registerDTO.getRole())).thenReturn(Optional.empty());
 
-        assertEquals("Role inválida ou não encontrada", exception.getMessage());
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    AppException exception =
+        assertThrows(AppException.class, () -> registerService.execute(registerDTO));
 
-        verify(roleRepository, times(1)).findByName(registerDTO.getRole());
-        verify(userRepository, never()).save(any(User.class));
-    }
+    assertEquals("Role inválida ou não encontrada", exception.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+    verify(roleRepository, times(1)).findByName(registerDTO.getRole());
+    verify(userRepository, never()).save(any(User.class));
+  }
 }

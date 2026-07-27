@@ -20,36 +20,34 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginService implements BaseService<LoginDTO, TokenResponseDTO> {
 
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-    private final RefreshTokenService refreshTokenService;
+  private final UserRepository userRepository;
+  private final JwtService jwtService;
+  private final AuthenticationManager authenticationManager;
+  private final RefreshTokenService refreshTokenService;
 
-    @Override
-    public TokenResponseDTO execute(LoginDTO input) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            input.getEmail(),
-                            input.getPassword()
-                    )
-            );
-        } catch (Exception e) {
-            log.warn("Falha de autenticação para email={}", input.getEmail());
-            throw new AppException("Credenciais inválidas", HttpStatus.UNAUTHORIZED);
-        }
-
-        User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new AppException("Usuário não encontrado", HttpStatus.NOT_FOUND));
-
-        String jwtToken = jwtService.generateToken(user);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
-
-        log.info("Login bem-sucedido para usuário id={}", user.getId());
-
-        return TokenResponseDTO.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken.getToken())
-                .build();
+  @Override
+  public TokenResponseDTO execute(LoginDTO input) {
+    try {
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
+    } catch (Exception e) {
+      log.warn("Falha de autenticação para email={}", input.getEmail());
+      throw new AppException("Credenciais inválidas", HttpStatus.UNAUTHORIZED);
     }
+
+    User user =
+        userRepository
+            .findByEmail(input.getEmail())
+            .orElseThrow(() -> new AppException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+
+    String jwtToken = jwtService.generateToken(user);
+    RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+
+    log.info("Login bem-sucedido para usuário id={}", user.getId());
+
+    return TokenResponseDTO.builder()
+        .accessToken(jwtToken)
+        .refreshToken(refreshToken.getToken())
+        .build();
+  }
 }

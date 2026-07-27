@@ -1,13 +1,12 @@
 package com.scheduling.modules.profile.dto;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 public class UpdateProfileRequest {
-    private UUID userId;
-    private UpdateProfileDTO data;
+  private UUID userId;
+  private UpdateProfileDTO data;
 }

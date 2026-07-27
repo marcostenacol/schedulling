@@ -16,27 +16,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BlockAvailabilityService implements BaseService<BlockAvailabilityService.Input, Void> {
 
-    private final AvailabilityBlockRepository repository;
+  private final AvailabilityBlockRepository repository;
 
-    @Data
-    @AllArgsConstructor
-    public static class Input {
-        private User provider;
-        private BlockAvailabilityDTO data;
-    }
+  @Data
+  @AllArgsConstructor
+  public static class Input {
+    private User provider;
+    private BlockAvailabilityDTO data;
+  }
 
-    @Override
-    public Void execute(Input input) {
-        AvailabilityBlock block = AvailabilityBlock.builder()
-                .provider(input.getProvider())
-                .startDateTime(input.getData().getStartDateTime())
-                .endDateTime(input.getData().getEndDateTime())
-                .reason(input.getData().getReason())
-                .build();
+  @Override
+  public Void execute(Input input) {
+    AvailabilityBlock block =
+        AvailabilityBlock.builder()
+            .provider(input.getProvider())
+            .startDateTime(input.getData().getStartDateTime())
+            .endDateTime(input.getData().getEndDateTime())
+            .reason(input.getData().getReason())
+            .build();
 
-        repository.save(block);
-        log.info("Bloqueio de disponibilidade criado provider={}, start={}, end={}",
-                input.getProvider().getId(), input.getData().getStartDateTime(), input.getData().getEndDateTime());
-        return null;
-    }
+    repository.save(block);
+    log.info(
+        "Bloqueio de disponibilidade criado provider={}, start={}, end={}",
+        input.getProvider().getId(),
+        input.getData().getStartDateTime(),
+        input.getData().getEndDateTime());
+    return null;
+  }
 }

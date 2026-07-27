@@ -19,21 +19,20 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProfileController extends BaseController {
 
-    private final DetailProfileService detailProfileService;
-    private final UpdateProfileService updateProfileService;
+  private final DetailProfileService detailProfileService;
+  private final UpdateProfileService updateProfileService;
 
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<ProfileResponseDTO>> me(@AuthenticationPrincipal User user) {
-        ProfileResponseDTO response = detailProfileService.execute(user.getId());
-        return success("Perfil recuperado com sucesso", response);
-    }
+  @GetMapping("/me")
+  public ResponseEntity<ApiResponse<ProfileResponseDTO>> me(@AuthenticationPrincipal User user) {
+    ProfileResponseDTO response = detailProfileService.execute(user.getId());
+    return success("Perfil recuperado com sucesso", response);
+  }
 
-    @PutMapping
-    public ResponseEntity<ApiResponse<ProfileResponseDTO>> update(
-            @AuthenticationPrincipal User user,
-            @Valid @RequestBody UpdateProfileDTO updateProfileDTO
-    ) {
-        ProfileResponseDTO response = updateProfileService.execute(new UpdateProfileRequest(user.getId(), updateProfileDTO));
-        return success("Perfil atualizado com sucesso", response);
-    }
+  @PutMapping
+  public ResponseEntity<ApiResponse<ProfileResponseDTO>> update(
+      @AuthenticationPrincipal User user, @Valid @RequestBody UpdateProfileDTO updateProfileDTO) {
+    ProfileResponseDTO response =
+        updateProfileService.execute(new UpdateProfileRequest(user.getId(), updateProfileDTO));
+    return success("Perfil atualizado com sucesso", response);
+  }
 }

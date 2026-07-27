@@ -15,32 +15,33 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CreateServiceService implements BaseService<CreateServiceRequest, ServiceResponseDTO> {
 
-    private final ServiceOfferedRepository repository;
+  private final ServiceOfferedRepository repository;
 
-    @Override
-    @CacheEvict(value = "services", key = "#input.provider.id")
-    public ServiceResponseDTO execute(CreateServiceRequest input) {
-        ServiceOffered serviceOffered = ServiceOffered.builder()
-                .provider(input.getProvider())
-                .name(input.getData().getName())
-                .description(input.getData().getDescription())
-                .price(input.getData().getPrice())
-                .durationMinutes(input.getData().getDurationMinutes())
-                .active(true)
-                .build();
+  @Override
+  @CacheEvict(value = "services", key = "#input.provider.id")
+  public ServiceResponseDTO execute(CreateServiceRequest input) {
+    ServiceOffered serviceOffered =
+        ServiceOffered.builder()
+            .provider(input.getProvider())
+            .name(input.getData().getName())
+            .description(input.getData().getDescription())
+            .price(input.getData().getPrice())
+            .durationMinutes(input.getData().getDurationMinutes())
+            .active(true)
+            .build();
 
-        ServiceOffered saved = repository.save(serviceOffered);
+    ServiceOffered saved = repository.save(serviceOffered);
 
-        log.info("Serviço criado id={}, provider={}", saved.getId(), saved.getProvider().getId());
+    log.info("Serviço criado id={}, provider={}", saved.getId(), saved.getProvider().getId());
 
-        return ServiceResponseDTO.builder()
-                .id(saved.getId())
-                .name(saved.getName())
-                .description(saved.getDescription())
-                .price(saved.getPrice())
-                .durationMinutes(saved.getDurationMinutes())
-                .active(saved.isActive())
-                .providerId(saved.getProvider().getId())
-                .build();
-    }
+    return ServiceResponseDTO.builder()
+        .id(saved.getId())
+        .name(saved.getName())
+        .description(saved.getDescription())
+        .price(saved.getPrice())
+        .durationMinutes(saved.getDurationMinutes())
+        .active(saved.isActive())
+        .providerId(saved.getProvider().getId())
+        .build();
+  }
 }

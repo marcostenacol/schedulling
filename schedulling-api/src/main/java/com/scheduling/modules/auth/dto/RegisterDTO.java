@@ -10,14 +10,14 @@ import lombok.Data;
 @Data
 public class RegisterDTO {
 
-    @NotBlank(message = "O email é obrigatório")
-    @Email(message = "Email inválido")
-    private String email;
+  @NotBlank(message = "O email é obrigatório")
+  @Email(message = "Email inválido")
+  private String email;
 
-    @NotBlank(message = "A senha é obrigatória")
-    @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
-    private String password;
+  @NotBlank(message = "A senha é obrigatória")
+  @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
+  private String password;
 
-    @NotNull(message = "A role é obrigatória")
-    private RoleEnum role;
+  @NotNull(message = "A role é obrigatória")
+  private RoleEnum role;
 }

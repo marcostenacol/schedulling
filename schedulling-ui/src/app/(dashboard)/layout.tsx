@@ -23,10 +23,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-8">
           <h1 className="text-xl font-bold text-blue-600">Scheduling App</h1>
           <div className="flex gap-6">
-            <Link href="/dashboard/schedule" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Agendamentos</Link>
-            <Link href="/dashboard/services" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Serviços</Link>
-            <Link href="/dashboard/availability" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Disponibilidade</Link>
-            <Link href="/dashboard/profile" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Meu Perfil</Link>
+            <Link href="/schedule" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Agendamentos</Link>
+            <Link href="/services" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Serviços</Link>
+            <Link href="/availability" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Disponibilidade</Link>
+            <Link href="/profile" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Meu Perfil</Link>
           </div>
         </div>
         <button 

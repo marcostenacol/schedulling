@@ -1,3 +1,32 @@
+# =============================================================================
+# EXTERNAL DEPENDENCY NOTICE — profile "main"
+# =============================================================================
+# The `api` service under the `main` profile defaults DB_HOST to `central-db`,
+# but no `central-db` service is declared anywhere in this file (only
+# `db-scheduling`, and that one only exists under the `homolog` profile).
+#
+# `central-db` is expected to be an externally managed PostgreSQL instance
+# provided by the sibling `infra-core` repo/stack, reachable through the
+# `shared-network` Docker network declared as `external: true` below (i.e.
+# created by that other stack, not by this compose file).
+#
+# Practical implications:
+#   - `docker compose --profile main up` will only work if the `infra-core`
+#     stack (or whatever currently provides `central-db` + `shared-network`)
+#     is already running on this host/network.
+#   - If `infra-core` is not running, or `shared-network` does not exist yet,
+#     the `api` container will fail to resolve/connect to `central-db` at
+#     startup (connection refused / unknown host), even though this file
+#     itself will still build and start without any error until that point.
+#   - This is an intentional cross-project dependency, not a bug in this
+#     compose file — see `.claude/CLAUDE.md` ("Débito Técnico Conhecido")
+#     for the full history/context of this decision.
+#
+# Use `docker compose --profile homolog up` instead when you need a fully
+# self-contained stack (spins up `db-scheduling` locally, no external
+# dependency required).
+# =============================================================================
+
 services:
   api:
     build: ./schedulling-api

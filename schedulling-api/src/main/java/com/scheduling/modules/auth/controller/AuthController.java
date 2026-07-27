@@ -23,41 +23,45 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController extends BaseController {
 
-    private final RegisterService registerService;
-    private final LoginService loginService;
-    private final RefreshTokenService refreshTokenService;
-    private final JwtService jwtService;
+  private final RegisterService registerService;
+  private final LoginService loginService;
+  private final RefreshTokenService refreshTokenService;
+  private final JwtService jwtService;
 
-    @PostMapping("/register")
-    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterDTO registerDTO) {
-        registerService.execute(registerDTO);
-        return success("Usuário registrado com sucesso", null);
+  @PostMapping("/register")
+  public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterDTO registerDTO) {
+    registerService.execute(registerDTO);
+    return success("Usuário registrado com sucesso", null);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<ApiResponse<TokenResponseDTO>> login(
+      @Valid @RequestBody LoginDTO loginDTO) {
+    TokenResponseDTO response = loginService.execute(loginDTO);
+    return success("Login realizado com sucesso", response);
+  }
+
+  @PostMapping("/refresh")
+  public ResponseEntity<ApiResponse<TokenResponseDTO>> refresh(
+      @Valid @RequestBody RefreshTokenRequestDTO request) {
+    RefreshToken refreshToken = refreshTokenService.validateRefreshToken(request.getRefreshToken());
+    String newAccessToken = jwtService.generateToken(refreshToken.getUser());
+
+    TokenResponseDTO response =
+        TokenResponseDTO.builder()
+            .accessToken(newAccessToken)
+            .refreshToken(refreshToken.getToken())
+            .build();
+
+    return success("Token renovado com sucesso", response);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<ApiResponse<Void>> logout(
+      @AuthenticationPrincipal UserDetails userDetails) {
+    if (userDetails instanceof com.scheduling.modules.auth.model.User user) {
+      refreshTokenService.deleteByUser(user);
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<TokenResponseDTO>> login(@Valid @RequestBody LoginDTO loginDTO) {
-        TokenResponseDTO response = loginService.execute(loginDTO);
-        return success("Login realizado com sucesso", response);
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<TokenResponseDTO>> refresh(@Valid @RequestBody RefreshTokenRequestDTO request) {
-        RefreshToken refreshToken = refreshTokenService.validateRefreshToken(request.getRefreshToken());
-        String newAccessToken = jwtService.generateToken(refreshToken.getUser());
-
-        TokenResponseDTO response = TokenResponseDTO.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(refreshToken.getToken())
-                .build();
-
-        return success("Token renovado com sucesso", response);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails instanceof com.scheduling.modules.auth.model.User user) {
-            refreshTokenService.deleteByUser(user);
-        }
-        return success("Logout realizado com sucesso", null);
-    }
+    return success("Logout realizado com sucesso", null);
+  }
 }

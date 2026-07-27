@@ -17,29 +17,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UpdateProfileService implements BaseService<UpdateProfileRequest, ProfileResponseDTO> {
 
-    private final ProfileRepository profileRepository;
+  private final ProfileRepository profileRepository;
 
-    @Override
-    @CacheEvict(value = "profiles", key = "#input.userId")
-    public ProfileResponseDTO execute(UpdateProfileRequest input) {
-        Profile profile = profileRepository.findByUserId(input.getUserId())
-                .orElseThrow(() -> new AppException("Perfil não encontrado", HttpStatus.NOT_FOUND));
+  @Override
+  @CacheEvict(value = "profiles", key = "#input.userId")
+  public ProfileResponseDTO execute(UpdateProfileRequest input) {
+    Profile profile =
+        profileRepository
+            .findByUserId(input.getUserId())
+            .orElseThrow(() -> new AppException("Perfil não encontrado", HttpStatus.NOT_FOUND));
 
-        profile.setName(input.getData().getName());
-        profile.setBio(input.getData().getBio());
-        profile.setAvatar(input.getData().getAvatar());
+    profile.setName(input.getData().getName());
+    profile.setBio(input.getData().getBio());
+    profile.setAvatar(input.getData().getAvatar());
 
-        profileRepository.save(profile);
+    profileRepository.save(profile);
 
-        log.info("Perfil atualizado userId={}", input.getUserId());
+    log.info("Perfil atualizado userId={}", input.getUserId());
 
-        return ProfileResponseDTO.builder()
-                .id(profile.getId())
-                .name(profile.getName())
-                .email(profile.getUser().getEmail())
-                .avatar(profile.getAvatar())
-                .bio(profile.getBio())
-                .type(profile.getType())
-                .build();
-    }
+    return ProfileResponseDTO.builder()
+        .id(profile.getId())
+        .name(profile.getName())
+        .email(profile.getUser().getEmail())
+        .avatar(profile.getAvatar())
+        .bio(profile.getBio())
+        .type(profile.getType())
+        .build();
+  }
 }

@@ -16,39 +16,44 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SetAvailabilityService implements BaseService<SetAvailabilityService.Input, AvailabilityResponseDTO> {
+public class SetAvailabilityService
+    implements BaseService<SetAvailabilityService.Input, AvailabilityResponseDTO> {
 
-    private final AvailabilityRepository repository;
+  private final AvailabilityRepository repository;
 
-    @Data
-    @AllArgsConstructor
-    public static class Input {
-        private User provider;
-        private AvailabilityDTO data;
-    }
+  @Data
+  @AllArgsConstructor
+  public static class Input {
+    private User provider;
+    private AvailabilityDTO data;
+  }
 
-    @Override
-    @CacheEvict(value = "availability", key = "#input.provider.id")
-    public AvailabilityResponseDTO execute(Input input) {
-        Availability availability = Availability.builder()
-                .provider(input.getProvider())
-                .dayOfWeek(input.getData().getDayOfWeek())
-                .startTime(input.getData().getStartTime())
-                .endTime(input.getData().getEndTime())
-                .active(input.getData().isActive())
-                .build();
+  @Override
+  @CacheEvict(value = "availability", key = "#input.provider.id")
+  public AvailabilityResponseDTO execute(Input input) {
+    Availability availability =
+        Availability.builder()
+            .provider(input.getProvider())
+            .dayOfWeek(input.getData().getDayOfWeek())
+            .startTime(input.getData().getStartTime())
+            .endTime(input.getData().getEndTime())
+            .active(input.getData().isActive())
+            .build();
 
-        Availability saved = repository.save(availability);
+    Availability saved = repository.save(availability);
 
-        log.info("Disponibilidade definida id={}, provider={}, dayOfWeek={}",
-                saved.getId(), input.getProvider().getId(), saved.getDayOfWeek());
+    log.info(
+        "Disponibilidade definida id={}, provider={}, dayOfWeek={}",
+        saved.getId(),
+        input.getProvider().getId(),
+        saved.getDayOfWeek());
 
-        return AvailabilityResponseDTO.builder()
-                .id(saved.getId())
-                .dayOfWeek(saved.getDayOfWeek())
-                .startTime(saved.getStartTime())
-                .endTime(saved.getEndTime())
-                .active(saved.isActive())
-                .build();
-    }
+    return AvailabilityResponseDTO.builder()
+        .id(saved.getId())
+        .dayOfWeek(saved.getDayOfWeek())
+        .startTime(saved.getStartTime())
+        .endTime(saved.getEndTime())
+        .active(saved.isActive())
+        .build();
+  }
 }

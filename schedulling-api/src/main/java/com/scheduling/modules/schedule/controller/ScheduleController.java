@@ -21,24 +21,22 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ScheduleController extends BaseController {
 
-    private final CreateScheduleService createScheduleService;
-    private final ListSchedulesService listSchedulesService;
+  private final CreateScheduleService createScheduleService;
+  private final ListSchedulesService listSchedulesService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<ScheduleResponseDTO>> create(
-            @AuthenticationPrincipal User user,
-            @Valid @RequestBody CreateScheduleDTO dto
-    ) {
-        ScheduleResponseDTO response = createScheduleService.execute(new CreateScheduleService.Input(user, dto));
-        return success("Agendamento realizado com sucesso", response);
-    }
+  @PostMapping
+  public ResponseEntity<ApiResponse<ScheduleResponseDTO>> create(
+      @AuthenticationPrincipal User user, @Valid @RequestBody CreateScheduleDTO dto) {
+    ScheduleResponseDTO response =
+        createScheduleService.execute(new CreateScheduleService.Input(user, dto));
+    return success("Agendamento realizado com sucesso", response);
+  }
 
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<Page<ScheduleResponseDTO>>> listMe(
-            @AuthenticationPrincipal User user,
-            @PageableDefault(size = 20) Pageable pageable
-    ) {
-        Page<ScheduleResponseDTO> response = listSchedulesService.execute(new ListSchedulesService.Input(user, pageable));
-        return success("Agendamentos recuperados com sucesso", response);
-    }
+  @GetMapping("/me")
+  public ResponseEntity<ApiResponse<Page<ScheduleResponseDTO>>> listMe(
+      @AuthenticationPrincipal User user, @PageableDefault(size = 20) Pageable pageable) {
+    Page<ScheduleResponseDTO> response =
+        listSchedulesService.execute(new ListSchedulesService.Input(user, pageable));
+    return success("Agendamentos recuperados com sucesso", response);
+  }
 }

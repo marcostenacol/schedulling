@@ -26,7 +26,7 @@ export const LoginForm = () => {
       const response = await authApi.login({ email, password });
       if (response.success && response.data.accessToken) {
         setToken(response.data.accessToken);
-        router.push('/dashboard/schedules');
+        router.push('/schedule');
       }
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;

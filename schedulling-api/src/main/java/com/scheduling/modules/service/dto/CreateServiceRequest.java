@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CreateServiceRequest {
-    private User provider;
-    private CreateServiceDTO data;
+  private User provider;
+  private CreateServiceDTO data;
 }
