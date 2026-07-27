@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { serviceApi } from '@/modules/service/api/service.api';
-import { ServiceResponseDTO } from '@/modules/service/dtos/service.dto';
+import { ServiceResponseDTO, CreateServiceDTO, UpdateServiceDTO } from '@/modules/service/dtos/service.dto';
 import { ServiceCard } from '@/modules/service/components/ServiceCard';
 import { ServiceForm } from '@/modules/service/components/ServiceForm';
 import { Button } from '@/components/ui/Button';
@@ -28,13 +28,13 @@ export default function ServicesPage() {
     fetchServices();
   }, []);
 
-  const handleCreate = async (data: any) => {
-    return serviceApi.create(data);
+  const handleCreate = async (data: CreateServiceDTO | UpdateServiceDTO) => {
+    return serviceApi.create(data as CreateServiceDTO);
   };
 
-  const handleUpdate = async (data: any) => {
-    if (!editingService) return;
-    return serviceApi.update(editingService.id, data);
+  const handleUpdate = async (data: CreateServiceDTO | UpdateServiceDTO) => {
+    if (!editingService) throw new Error('Nenhum serviço selecionado para edição.');
+    return serviceApi.update(editingService.id, data as UpdateServiceDTO);
   };
 
   const handleSuccess = () => {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { authApi } from '../api/auth.api';
 import { Input } from '@/components/ui/Input';
@@ -26,8 +27,9 @@ export const RegisterForm = () => {
         alert('Conta criada com sucesso! Faça login.');
         router.push('/login');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao registrar.');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao registrar.');
     } finally {
       setLoading(false);
     }
@@ -59,7 +61,7 @@ export const RegisterForm = () => {
         <select 
           className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={role}
-          onChange={(e) => setRole(e.target.value as any)}
+          onChange={(e) => setRole(e.target.value as 'ROLE_CLIENT' | 'ROLE_PROVIDER')}
         >
           <option value="ROLE_CLIENT">Cliente</option>
           <option value="ROLE_PROVIDER">Prestador de Serviço</option>

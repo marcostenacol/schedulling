@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { AxiosError } from 'axios';
 import { CreateServiceDTO, ServiceResponseDTO, UpdateServiceDTO } from '../dtos/service.dto';
+import { ApiResponse } from '../../auth/dtos/auth.dto';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 
@@ -9,7 +11,7 @@ interface ServiceFormProps {
   service?: ServiceResponseDTO;
   onSuccess: () => void;
   onCancel: () => void;
-  onSubmit: (data: any) => Promise<any>;
+  onSubmit: (data: CreateServiceDTO | UpdateServiceDTO) => Promise<ApiResponse<ServiceResponseDTO>>;
 }
 
 export const ServiceForm: React.FC<ServiceFormProps> = ({ service, onSuccess, onCancel, onSubmit }) => {
@@ -33,8 +35,9 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ service, onSuccess, on
         durationMinutes: parseInt(durationMinutes)
       });
       onSuccess();
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao salvar serviço.');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao salvar serviço.');
     } finally {
       setLoading(false);
     }

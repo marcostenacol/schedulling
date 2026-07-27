@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { AxiosError } from 'axios';
 import { ProfileResponseDTO, UpdateProfileDTO } from '../dtos/profile.dto';
+import { ApiResponse } from '../../auth/dtos/auth.dto';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 
@@ -9,7 +11,7 @@ interface ProfileFormProps {
   profile: ProfileResponseDTO;
   onSuccess: (updated: ProfileResponseDTO) => void;
   onCancel: () => void;
-  onUpdate: (data: UpdateProfileDTO) => Promise<any>;
+  onUpdate: (data: UpdateProfileDTO) => Promise<ApiResponse<ProfileResponseDTO>>;
 }
 
 export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, onCancel, onUpdate }) => {
@@ -27,8 +29,9 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
     try {
       const response = await onUpdate({ name, bio, avatar });
       onSuccess(response.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao atualizar perfil.');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao atualizar perfil.');
     } finally {
       setLoading(false);
     }

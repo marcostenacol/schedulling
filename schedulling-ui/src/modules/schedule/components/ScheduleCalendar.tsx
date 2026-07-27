@@ -22,13 +22,21 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  resource: ScheduleResponseDTO;
+}
+
 interface ScheduleCalendarProps {
   schedules: ScheduleResponseDTO[];
-  onSelectEvent: (event: any) => void;
+  onSelectEvent: (event: CalendarEvent) => void;
 }
 
 export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, onSelectEvent }) => {
-  const events = schedules.map(s => ({
+  const events: CalendarEvent[] = schedules.map(s => ({
     id: s.id,
     title: `${s.serviceName} - ${s.clientName || 'Cliente'}`,
     start: new Date(s.startDateTime),
@@ -53,7 +61,7 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
           day: "Dia"
         }}
         onSelectEvent={onSelectEvent}
-        eventPropGetter={(event) => ({
+        eventPropGetter={() => ({
           className: 'bg-blue-600 text-white rounded-md border-none text-xs px-2 py-1'
         })}
       />

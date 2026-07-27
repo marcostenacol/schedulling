@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../store/auth.store';
 import { authApi } from '../api/auth.api';
@@ -27,8 +28,9 @@ export const LoginForm = () => {
         setToken(response.data.accessToken);
         router.push('/dashboard/schedules');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao realizar login.');
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Erro ao realizar login.');
     } finally {
       setLoading(false);
     }

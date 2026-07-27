@@ -25,7 +25,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
       {profile.bio && (
         <div className="w-full text-center mb-6">
           <h3 className="text-sm font-semibold text-gray-700 uppercase mb-2">Sobre mim</h3>
-          <p className="text-gray-600 italic">"{profile.bio}"</p>
+          <p className="text-gray-600 italic">&ldquo;{profile.bio}&rdquo;</p>
         </div>
       )}
       
