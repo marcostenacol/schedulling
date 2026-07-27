@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { ProfileResponseDTO } from '../dtos/profile.dto';
 
 interface ProfileViewProps {
@@ -11,7 +12,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
     <div className="bg-white shadow rounded-lg p-6 flex flex-col items-center">
       <div className="w-32 h-32 rounded-full bg-gray-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-blue-500">
         {profile.avatar ? (
-          <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
+          <Image
+            src={profile.avatar}
+            alt={profile.name}
+            width={128}
+            height={128}
+            unoptimized
+            className="w-full h-full object-cover"
+          />
         ) : (
           <span className="text-4xl text-gray-400 font-bold">{profile.name.charAt(0).toUpperCase()}</span>
         )}
