@@ -9,9 +9,11 @@ import com.scheduling.modules.availability.repository.AvailabilityRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SetAvailabilityService implements BaseService<SetAvailabilityService.Input, AvailabilityResponseDTO> {
@@ -37,6 +39,9 @@ public class SetAvailabilityService implements BaseService<SetAvailabilityServic
                 .build();
 
         Availability saved = repository.save(availability);
+
+        log.info("Disponibilidade definida id={}, provider={}, dayOfWeek={}",
+                saved.getId(), input.getProvider().getId(), saved.getDayOfWeek());
 
         return AvailabilityResponseDTO.builder()
                 .id(saved.getId())

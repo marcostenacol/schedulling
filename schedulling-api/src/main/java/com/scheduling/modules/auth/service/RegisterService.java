@@ -10,10 +10,12 @@ import com.scheduling.shared.exception.AppException;
 import com.scheduling.modules.profile.model.Profile;
 import com.scheduling.modules.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RegisterService implements BaseService<RegisterDTO, Void> {
@@ -26,6 +28,7 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
     @Override
     public Void execute(RegisterDTO input) {
         if (userRepository.existsByEmail(input.getEmail())) {
+            log.warn("Tentativa de registro com email já cadastrado: {}", input.getEmail());
             throw new AppException("Email já cadastrado no sistema", HttpStatus.BAD_REQUEST);
         }
 
@@ -47,6 +50,8 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
                 .build();
 
         profileRepository.save(profile);
+
+        log.info("Novo usuário registrado id={}, role={}", savedUser.getId(), role.getName());
 
         return null;
     }

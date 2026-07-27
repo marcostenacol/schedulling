@@ -8,8 +8,10 @@ import com.scheduling.modules.availability.repository.AvailabilityBlockRepositor
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BlockAvailabilityService implements BaseService<BlockAvailabilityService.Input, Void> {
@@ -33,6 +35,8 @@ public class BlockAvailabilityService implements BaseService<BlockAvailabilitySe
                 .build();
 
         repository.save(block);
+        log.info("Bloqueio de disponibilidade criado provider={}, start={}, end={}",
+                input.getProvider().getId(), input.getData().getStartDateTime(), input.getData().getEndDateTime());
         return null;
     }
 }

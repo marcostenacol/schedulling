@@ -5,6 +5,7 @@ import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.auth.repository.RefreshTokenRepository;
 import com.scheduling.shared.exception.AppException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
@@ -36,10 +38,14 @@ public class RefreshTokenService {
 
     public RefreshToken validateRefreshToken(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new AppException("Refresh token inválido", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.warn("Tentativa de uso de refresh token inválido");
+                    return new AppException("Refresh token inválido", HttpStatus.UNAUTHORIZED);
+                });
 
         if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             refreshTokenRepository.delete(refreshToken);
+            log.warn("Tentativa de uso de refresh token expirado para usuário id={}", refreshToken.getUser().getId());
             throw new AppException("Refresh token expirado", HttpStatus.UNAUTHORIZED);
         }
 

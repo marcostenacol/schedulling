@@ -4,10 +4,12 @@ import com.scheduling.base.service.BaseService;
 import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ListAllUsersService implements BaseService<Void, List<User>> {
@@ -16,6 +18,8 @@ public class ListAllUsersService implements BaseService<Void, List<User>> {
 
     @Override
     public List<User> execute(Void input) {
-        return repository.findAll();
+        List<User> users = repository.findAll();
+        log.info("Listagem administrativa de usuários solicitada, total={}", users.size());
+        return users;
     }
 }

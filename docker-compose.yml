@@ -3,7 +3,7 @@ services:
     build: ./schedulling-api
     profiles: ["homolog", "main"]
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     environment:
       DB_HOST: ${DB_HOST:-central-db}
       DB_PORT: ${DB_PORT:-5432}
@@ -13,6 +13,7 @@ services:
       REDIS_HOST: ${REDIS_HOST:-cache-scheduling}
       REDIS_PORT: ${REDIS_PORT:-6379}
       JWT_SECRET: ${JWT_SECRET}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
     depends_on:
       cache-scheduling:
         condition: service_healthy
@@ -23,7 +24,7 @@ services:
     build: ./schedulling-ui
     profiles: ["homolog", "main"]
     ports:
-      - "3001:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     networks:
@@ -49,7 +50,7 @@ services:
       POSTGRES_USER: ${DB_USER_HOMOLOG:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD_HOMOLOG:-postgres}
     ports:
-      - "${DB_PORT_HOMOLOG:-5435}:5432"
+      - "127.0.0.1:${DB_PORT_HOMOLOG:-5435}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

@@ -7,10 +7,12 @@ import com.scheduling.modules.profile.model.Profile;
 import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.shared.exception.AppException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UpdateProfileService implements BaseService<UpdateProfileRequest, ProfileResponseDTO> {
@@ -28,6 +30,8 @@ public class UpdateProfileService implements BaseService<UpdateProfileRequest, P
         profile.setAvatar(input.getData().getAvatar());
 
         profileRepository.save(profile);
+
+        log.info("Perfil atualizado userId={}", input.getUserId());
 
         return ProfileResponseDTO.builder()
                 .id(profile.getId())

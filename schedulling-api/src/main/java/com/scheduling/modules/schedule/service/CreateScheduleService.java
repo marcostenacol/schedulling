@@ -17,6 +17,7 @@ import com.scheduling.shared.exception.AppException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateScheduleService implements BaseService<CreateScheduleService.Input, ScheduleResponseDTO> {
@@ -56,11 +58,13 @@ public class CreateScheduleService implements BaseService<CreateScheduleService.
 
         // 1. Validar conflitos com outros agendamentos
         if (!scheduleRepository.findOverlappingSchedules(provider.getId(), start, end).isEmpty()) {
+            log.warn("Conflito de horário ao criar agendamento para provider={}, start={}", provider.getId(), start);
             throw new AppException("Este horário já está ocupado", HttpStatus.CONFLICT);
         }
 
         // 2. Validar conflitos com blocos de indisponibilidade
         if (!blockRepository.findBlocksInRange(provider.getId(), start, end).isEmpty()) {
+            log.warn("Horário bloqueado ao criar agendamento para provider={}, start={}", provider.getId(), start);
             throw new AppException("O prestador não está disponível neste horário", HttpStatus.CONFLICT);
         }
 
@@ -77,6 +81,9 @@ public class CreateScheduleService implements BaseService<CreateScheduleService.
                 .build();
 
         Schedule saved = scheduleRepository.save(schedule);
+
+        log.info("Agendamento criado id={}, provider={}, client={}, start={}",
+                saved.getId(), provider.getId(), input.getClient().getId(), start);
 
         String clientName = profileRepository.findByUserId(saved.getClient().getId())
                 .map(p -> p.getName())

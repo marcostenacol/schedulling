@@ -9,11 +9,13 @@ import com.scheduling.modules.auth.repository.UserRepository;
 import com.scheduling.shared.exception.AppException;
 import com.scheduling.shared.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService implements BaseService<LoginDTO, TokenResponseDTO> {
@@ -33,6 +35,7 @@ public class LoginService implements BaseService<LoginDTO, TokenResponseDTO> {
                     )
             );
         } catch (Exception e) {
+            log.warn("Falha de autenticação para email={}", input.getEmail());
             throw new AppException("Credenciais inválidas", HttpStatus.UNAUTHORIZED);
         }
 
@@ -41,6 +44,8 @@ public class LoginService implements BaseService<LoginDTO, TokenResponseDTO> {
 
         String jwtToken = jwtService.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+
+        log.info("Login bem-sucedido para usuário id={}", user.getId());
 
         return TokenResponseDTO.builder()
                 .accessToken(jwtToken)

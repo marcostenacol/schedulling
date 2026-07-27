@@ -7,10 +7,12 @@ import com.scheduling.modules.service.model.ServiceOffered;
 import com.scheduling.modules.service.repository.ServiceOfferedRepository;
 import com.scheduling.shared.exception.AppException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UpdateServiceService implements BaseService<UpdateServiceRequest, ServiceResponseDTO> {
@@ -24,6 +26,8 @@ public class UpdateServiceService implements BaseService<UpdateServiceRequest, S
                 .orElseThrow(() -> new AppException("Serviço não encontrado", HttpStatus.NOT_FOUND));
 
         if (!service.getProvider().getId().equals(input.getProvider().getId())) {
+            log.warn("Tentativa de edição de serviço id={} por usuário sem permissão id={}",
+                    input.getServiceId(), input.getProvider().getId());
             throw new AppException("Você não tem permissão para editar este serviço", HttpStatus.FORBIDDEN);
         }
 
@@ -34,6 +38,8 @@ public class UpdateServiceService implements BaseService<UpdateServiceRequest, S
         if (input.getData().getActive() != null) service.setActive(input.getData().getActive());
 
         ServiceOffered updated = repository.save(service);
+
+        log.info("Serviço atualizado id={}", updated.getId());
 
         return ServiceResponseDTO.builder()
                 .id(updated.getId())

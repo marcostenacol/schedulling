@@ -6,9 +6,11 @@ import com.scheduling.modules.service.dto.ServiceResponseDTO;
 import com.scheduling.modules.service.model.ServiceOffered;
 import com.scheduling.modules.service.repository.ServiceOfferedRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateServiceService implements BaseService<CreateServiceRequest, ServiceResponseDTO> {
@@ -28,6 +30,8 @@ public class CreateServiceService implements BaseService<CreateServiceRequest, S
                 .build();
 
         ServiceOffered saved = repository.save(serviceOffered);
+
+        log.info("Serviço criado id={}, provider={}", saved.getId(), saved.getProvider().getId());
 
         return ServiceResponseDTO.builder()
                 .id(saved.getId())

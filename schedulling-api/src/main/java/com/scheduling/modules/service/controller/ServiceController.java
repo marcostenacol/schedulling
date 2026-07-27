@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/services")
+@RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
 public class ServiceController extends BaseController {
 

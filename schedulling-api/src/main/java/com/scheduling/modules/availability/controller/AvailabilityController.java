@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/availability")
+@RequestMapping("/api/v1/availability")
 @RequiredArgsConstructor
 public class AvailabilityController extends BaseController {
 
