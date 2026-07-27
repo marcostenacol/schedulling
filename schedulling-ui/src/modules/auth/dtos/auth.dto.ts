@@ -19,3 +19,12 @@ export interface ApiResponse<T> {
   message: string;
   data: T;
 }
+
+// Formato padrão de resposta paginada do Spring Data (org.springframework.data.domain.Page<T>).
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+}

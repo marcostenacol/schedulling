@@ -14,6 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,13 +54,14 @@ class ListSchedulesServiceTest {
                 .status(ScheduleStatus.CONFIRMED)
                 .build();
 
-        when(repository.findByProviderIdAndStatusIn(any(), anyList())).thenReturn(Collections.singletonList(schedule));
+        Pageable pageable = PageRequest.of(0, 20);
+        when(repository.findByProviderIdAndStatusIn(any(), anyList(), any())).thenReturn(new PageImpl<>(Collections.singletonList(schedule)));
 
-        List<ScheduleResponseDTO> response = listSchedulesService.execute(provider);
+        Page<ScheduleResponseDTO> response = listSchedulesService.execute(new ListSchedulesService.Input(provider, pageable));
 
         assertNotNull(response);
-        assertEquals(1, response.size());
-        verify(repository, times(1)).findByProviderIdAndStatusIn(any(), anyList());
+        assertEquals(1, response.getContent().size());
+        verify(repository, times(1)).findByProviderIdAndStatusIn(any(), anyList(), any());
     }
 
     @Test
@@ -76,12 +81,13 @@ class ListSchedulesServiceTest {
                 .status(ScheduleStatus.CONFIRMED)
                 .build();
 
-        when(repository.findByClientIdAndStatusIn(any(), anyList())).thenReturn(Collections.singletonList(schedule));
+        Pageable pageable = PageRequest.of(0, 20);
+        when(repository.findByClientIdAndStatusIn(any(), anyList(), any())).thenReturn(new PageImpl<>(Collections.singletonList(schedule)));
 
-        List<ScheduleResponseDTO> response = listSchedulesService.execute(client);
+        Page<ScheduleResponseDTO> response = listSchedulesService.execute(new ListSchedulesService.Input(client, pageable));
 
         assertNotNull(response);
-        assertEquals(1, response.size());
-        verify(repository, times(1)).findByClientIdAndStatusIn(any(), anyList());
+        assertEquals(1, response.getContent().size());
+        verify(repository, times(1)).findByClientIdAndStatusIn(any(), anyList(), any());
     }
 }

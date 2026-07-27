@@ -16,7 +16,7 @@ export default function ServicesPage() {
   const fetchServices = async () => {
     try {
       const response = await serviceApi.listMe();
-      setServices(response.data);
+      setServices(response.data.content);
     } catch (err) {
       console.error('Erro ao buscar serviços', err);
     } finally {

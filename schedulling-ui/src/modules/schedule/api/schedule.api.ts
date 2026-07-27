@@ -1,5 +1,5 @@
 import { apiClient } from '@/base/api/client';
-import { ApiResponse } from '../../auth/dtos/auth.dto';
+import { ApiResponse, PageResponse } from '../../auth/dtos/auth.dto';
 import { CreateScheduleDTO, ScheduleResponseDTO } from '../dtos/schedule.dto';
 
 export const scheduleApi = {
@@ -7,8 +7,8 @@ export const scheduleApi = {
     const response = await apiClient.post<ApiResponse<ScheduleResponseDTO>>('/schedules', data);
     return response.data;
   },
-  listMe: async (): Promise<ApiResponse<ScheduleResponseDTO[]>> => {
-    const response = await apiClient.get<ApiResponse<ScheduleResponseDTO[]>>('/schedules/me');
+  listMe: async (): Promise<ApiResponse<PageResponse<ScheduleResponseDTO>>> => {
+    const response = await apiClient.get<ApiResponse<PageResponse<ScheduleResponseDTO>>>('/schedules/me');
     return response.data;
   }
 };

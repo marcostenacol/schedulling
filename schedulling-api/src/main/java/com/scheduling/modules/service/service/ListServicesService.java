@@ -5,25 +5,23 @@ import com.scheduling.modules.service.dto.ServiceResponseDTO;
 import com.scheduling.modules.service.model.ServiceOffered;
 import com.scheduling.modules.service.repository.ServiceOfferedRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ListServicesService implements BaseService<UUID, List<ServiceResponseDTO>> {
+public class ListServicesService implements BaseService<ListServicesService.Input, Page<ServiceResponseDTO>> {
 
     private final ServiceOfferedRepository repository;
 
     @Override
-    @Cacheable(value = "services", key = "#providerId")
-    public List<ServiceResponseDTO> execute(UUID providerId) {
-        List<ServiceOffered> services = repository.findByProviderIdAndActiveTrue(providerId);
+    public Page<ServiceResponseDTO> execute(Input input) {
+        Page<ServiceOffered> services = repository.findByProviderIdAndActiveTrue(input.providerId(), input.pageable());
 
-        return services.stream().map(s -> ServiceResponseDTO.builder()
+        return services.map(s -> ServiceResponseDTO.builder()
                 .id(s.getId())
                 .name(s.getName())
                 .description(s.getDescription())
@@ -31,6 +29,9 @@ public class ListServicesService implements BaseService<UUID, List<ServiceRespon
                 .durationMinutes(s.getDurationMinutes())
                 .active(s.isActive())
                 .providerId(s.getProvider().getId())
-                .build()).collect(Collectors.toList());
+                .build());
+    }
+
+    public record Input(UUID providerId, Pageable pageable) {
     }
 }

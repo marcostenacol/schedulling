@@ -1,5 +1,5 @@
 import { apiClient } from '@/base/api/client';
-import { ApiResponse } from '../../auth/dtos/auth.dto';
+import { ApiResponse, PageResponse } from '../../auth/dtos/auth.dto';
 import { CreateServiceDTO, ServiceResponseDTO, UpdateServiceDTO } from '../dtos/service.dto';
 
 export const serviceApi = {
@@ -7,8 +7,8 @@ export const serviceApi = {
     const response = await apiClient.post<ApiResponse<ServiceResponseDTO>>('/services', data);
     return response.data;
   },
-  listMe: async (): Promise<ApiResponse<ServiceResponseDTO[]>> => {
-    const response = await apiClient.get<ApiResponse<ServiceResponseDTO[]>>('/services/me');
+  listMe: async (): Promise<ApiResponse<PageResponse<ServiceResponseDTO>>> => {
+    const response = await apiClient.get<ApiResponse<PageResponse<ServiceResponseDTO>>>('/services/me');
     return response.data;
   },
   update: async (id: string, data: UpdateServiceDTO): Promise<ApiResponse<ServiceResponseDTO>> => {

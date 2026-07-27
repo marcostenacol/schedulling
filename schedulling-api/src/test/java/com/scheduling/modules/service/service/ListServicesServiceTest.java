@@ -11,11 +11,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,14 +50,15 @@ class ListServicesServiceTest {
                 .active(true)
                 .build();
 
-        when(repository.findByProviderIdAndActiveTrue(providerId)).thenReturn(List.of(service));
+        Pageable pageable = PageRequest.of(0, 20);
+        when(repository.findByProviderIdAndActiveTrue(eq(providerId), any())).thenReturn(new PageImpl<>(List.of(service)));
 
-        List<ServiceResponseDTO> response = listServicesService.execute(providerId);
+        Page<ServiceResponseDTO> response = listServicesService.execute(new ListServicesService.Input(providerId, pageable));
 
         assertNotNull(response);
-        assertEquals(1, response.size());
-        assertEquals("Serviço 1", response.get(0).getName());
+        assertEquals(1, response.getContent().size());
+        assertEquals("Serviço 1", response.getContent().get(0).getName());
 
-        verify(repository, times(1)).findByProviderIdAndActiveTrue(providerId);
+        verify(repository, times(1)).findByProviderIdAndActiveTrue(eq(providerId), any());
     }
 }

@@ -9,11 +9,12 @@ import com.scheduling.modules.schedule.service.CreateScheduleService;
 import com.scheduling.modules.schedule.service.ListSchedulesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/schedules")
@@ -33,8 +34,11 @@ public class ScheduleController extends BaseController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<List<ScheduleResponseDTO>>> listMe(@AuthenticationPrincipal User user) {
-        List<ScheduleResponseDTO> response = listSchedulesService.execute(user);
+    public ResponseEntity<ApiResponse<Page<ScheduleResponseDTO>>> listMe(
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        Page<ScheduleResponseDTO> response = listSchedulesService.execute(new ListSchedulesService.Input(user, pageable));
         return success("Agendamentos recuperados com sucesso", response);
     }
 }

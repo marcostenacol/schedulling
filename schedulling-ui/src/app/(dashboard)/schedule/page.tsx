@@ -13,7 +13,7 @@ export default function SchedulePage() {
   const fetchSchedules = async () => {
     try {
       const response = await scheduleApi.listMe();
-      setSchedules(response.data);
+      setSchedules(response.data.content);
     } catch (err) {
       console.error('Erro ao buscar agendamentos', err);
     } finally {
