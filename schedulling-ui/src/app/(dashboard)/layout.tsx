@@ -6,7 +6,7 @@ import { useAuthStore } from '@/modules/auth/store/auth.store';
 import Sidebar from '@/components/ui/Sidebar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -21,17 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-app-bg flex gap-4 p-4">
       <Sidebar />
       <main className="flex-1">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={() => { logout(); router.push('/login'); }}
-              className="text-app-muted hover:text-red-600 font-medium"
-            >
-              Sair
-            </button>
-          </div>
-          {children}
-        </div>
+        <div className="max-w-4xl mx-auto">{children}</div>
       </main>
     </div>
   );
