@@ -8,6 +8,7 @@ import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.auth.repository.UserRepository;
 import com.scheduling.modules.availability.repository.AvailabilityBlockRepository;
 import com.scheduling.modules.availability.repository.AvailabilityRepository;
+import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.modules.schedule.dto.CreateScheduleDTO;
 import com.scheduling.modules.schedule.dto.ScheduleResponseDTO;
 import com.scheduling.modules.schedule.model.Schedule;
@@ -38,6 +39,7 @@ class CreateScheduleServiceTest {
   @Mock private UserRepository userRepository;
   @Mock private AvailabilityRepository availabilityRepository;
   @Mock private AvailabilityBlockRepository blockRepository;
+  @Mock private ProfileRepository profileRepository;
 
   @InjectMocks private CreateScheduleService createScheduleService;
 
@@ -73,6 +75,7 @@ class CreateScheduleServiceTest {
         .thenReturn(Collections.emptyList());
     when(blockRepository.findBlocksInRange(any(), any(), any()))
         .thenReturn(Collections.emptyList());
+    when(profileRepository.findByUserId(any())).thenReturn(Optional.empty());
 
     Schedule saved =
         Schedule.builder()

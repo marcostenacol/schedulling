@@ -6,10 +6,12 @@ import static org.mockito.Mockito.*;
 
 import com.scheduling.modules.auth.dto.LoginDTO;
 import com.scheduling.modules.auth.dto.TokenResponseDTO;
+import com.scheduling.modules.auth.model.RefreshToken;
 import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.auth.repository.UserRepository;
 import com.scheduling.shared.exception.AppException;
 import com.scheduling.shared.security.JwtService;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +33,8 @@ class LoginServiceTest {
 
   @Mock private AuthenticationManager authenticationManager;
 
+  @Mock private RefreshTokenService refreshTokenService;
+
   @InjectMocks private LoginService loginService;
 
   private LoginDTO loginDTO;
@@ -51,16 +55,25 @@ class LoginServiceTest {
     when(userRepository.findByEmail(loginDTO.getEmail())).thenReturn(Optional.of(user));
     when(jwtService.generateToken(user)).thenReturn("jwtToken");
 
+    RefreshToken refreshToken =
+        RefreshToken.builder()
+            .token("refreshToken")
+            .user(user)
+            .expiryDate(LocalDateTime.now().plusDays(7))
+            .build();
+    when(refreshTokenService.createRefreshToken(user)).thenReturn(refreshToken);
+
     TokenResponseDTO response = loginService.execute(loginDTO);
 
     assertNotNull(response);
     assertEquals("jwtToken", response.getAccessToken());
-    assertEquals("to-be-implemented", response.getRefreshToken());
+    assertEquals("refreshToken", response.getRefreshToken());
 
     verify(authenticationManager, times(1))
         .authenticate(any(UsernamePasswordAuthenticationToken.class));
     verify(userRepository, times(1)).findByEmail(loginDTO.getEmail());
     verify(jwtService, times(1)).generateToken(user);
+    verify(refreshTokenService, times(1)).createRefreshToken(user);
   }
 
   @Test

@@ -41,7 +41,7 @@ class AuthControllerTest {
   @DisplayName("Deve retornar 400 ao logar com corpo vazio (sem email/senha)")
   void shouldReturn400WhenLoginBodyIsEmpty() throws Exception {
     mockMvc
-        .perform(post("/auth/login").contentType("application/json").content("{}"))
+        .perform(post("/api/v1/auth/login").contentType("application/json").content("{}"))
         .andExpect(status().isBadRequest());
   }
 
@@ -50,7 +50,7 @@ class AuthControllerTest {
   void shouldReturn400WhenEmailIsInvalid() throws Exception {
     mockMvc
         .perform(
-            post("/auth/login")
+            post("/api/v1/auth/login")
                 .contentType("application/json")
                 .content("{\"email\":\"not-an-email\",\"password\":\"123456\"}"))
         .andExpect(status().isBadRequest());
