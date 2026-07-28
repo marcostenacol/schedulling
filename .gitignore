@@ -11,3 +11,4 @@ npm-debug.log*
 
 # Java / Maven
 target/
+.worktrees/
