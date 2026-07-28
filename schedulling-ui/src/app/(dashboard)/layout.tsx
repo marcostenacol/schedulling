@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/modules/auth/store/auth.store';
-import Link from 'next/link';
+import Sidebar from '@/components/ui/Sidebar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, logout } = useAuthStore();
@@ -18,26 +18,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <nav className="bg-white shadow-sm h-16 flex items-center justify-between px-8">
-        <div className="flex items-center gap-8">
-          <h1 className="text-xl font-bold text-blue-600">Scheduling App</h1>
-          <div className="flex gap-6">
-            <Link href="/schedule" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Agendamentos</Link>
-            <Link href="/services" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Serviços</Link>
-            <Link href="/availability" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Disponibilidade</Link>
-            <Link href="/profile" className="text-gray-600 hover:text-blue-600 font-semibold transition-colors">Meu Perfil</Link>
-          </div>
-        </div>
-        <button 
-          onClick={() => { logout(); router.push('/login'); }}
-          className="text-gray-500 hover:text-red-600 font-medium"
-        >
-          Sair
-        </button>
-      </nav>
-      <main className="flex-1 p-8">
+    <div className="min-h-screen bg-app-bg flex gap-4 p-4">
+      <Sidebar />
+      <main className="flex-1">
         <div className="max-w-4xl mx-auto">
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => { logout(); router.push('/login'); }}
+              className="text-app-muted hover:text-red-600 font-medium"
+            >
+              Sair
+            </button>
+          </div>
           {children}
         </div>
       </main>
