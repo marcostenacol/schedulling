@@ -49,8 +49,8 @@ export default function ServicesPage() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Meus Serviços</h1>
-          <p className="text-gray-500 mt-1">Gerencie os tipos de serviços que você oferece aos seus clientes.</p>
+          <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Meus Serviços</h1>
+          <p className="text-app-muted mt-1">Gerencie os tipos de serviços que você oferece aos seus clientes.</p>
         </div>
         <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,14 +72,14 @@ export default function ServicesPage() {
       )}
 
       {services.length === 0 ? (
-        <div className="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-12 text-center">
+        <div className="bg-app-surface border-2 border-dashed border-app-border rounded-2xl p-12 text-center">
           <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900">Nenhum serviço cadastrado</h3>
-          <p className="text-gray-500 mb-6">Comece adicionando seu primeiro serviço para que os clientes possam agendar.</p>
+          <h3 className="text-lg font-semibold text-app-ink">Nenhum serviço cadastrado</h3>
+          <p className="text-app-muted mb-6">Comece adicionando seu primeiro serviço para que os clientes possam agendar.</p>
           <Button variant="secondary" onClick={() => setShowForm(true)}>Adicionar Serviço</Button>
         </div>
       ) : (
