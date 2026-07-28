@@ -30,8 +30,8 @@ export default function SchedulePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Minha Agenda</h1>
-        <p className="text-gray-500 mt-1">Visualize e gerencie seus próximos compromissos.</p>
+        <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Minha Agenda</h1>
+        <p className="text-app-muted mt-1">Visualize e gerencie seus próximos compromissos.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -43,7 +43,7 @@ export default function SchedulePage() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div className="bg-app-surface p-6 rounded-2xl border border-app-border shadow-app-card">
             <h3 className="font-bold text-gray-900 mb-4">Detalhes do Agendamento</h3>
             {selectedSchedule ? (
               <div className="space-y-4">
@@ -61,8 +61,8 @@ export default function SchedulePage() {
                 </div>
                 <div className="pt-4">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    selectedSchedule.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : 
-                    selectedSchedule.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'
+                    selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success/15 text-app-success' :
+                    selectedSchedule.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-app-surface-2 text-app-muted'
                   }`}>
                     {selectedSchedule.status}
                   </span>
@@ -73,7 +73,7 @@ export default function SchedulePage() {
             )}
           </div>
 
-          <div className="bg-blue-600 p-6 rounded-2xl text-white shadow-lg shadow-blue-200">
+          <div className="bg-app-accent p-6 rounded-2xl text-app-accent-ink shadow-app-card">
             <h3 className="font-bold mb-2">Resumo da Semana</h3>
             <p className="text-blue-100 text-sm">Você tem {schedules.length} agendamentos esta semana.</p>
             <button className="mt-4 w-full bg-white text-blue-600 py-2 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors">
