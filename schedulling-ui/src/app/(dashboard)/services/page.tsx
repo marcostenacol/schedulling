@@ -43,7 +43,7 @@ export default function ServicesPage() {
     fetchServices();
   };
 
-  if (loading) return <div className="flex justify-center py-20 text-blue-600 font-medium">Carregando serviços...</div>;
+  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando serviços...</div>;
 
   return (
     <div className="space-y-8">
@@ -73,8 +73,8 @@ export default function ServicesPage() {
 
       {services.length === 0 ? (
         <div className="bg-app-surface border-2 border-dashed border-app-border rounded-2xl p-12 text-center">
-          <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="bg-app-surface-2 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-app-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>

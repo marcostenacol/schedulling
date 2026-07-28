@@ -32,6 +32,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? 'page' : undefined}
               className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
                 isActive ? 'bg-app-accent-soft text-app-accent' : 'text-app-muted hover:bg-app-surface-2'
               }`}

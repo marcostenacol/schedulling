@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-app-bg flex gap-4 p-4">
+    <div className="min-h-svh bg-app-bg flex gap-4 p-4">
       <Sidebar />
       <main className="flex-1">
         <div className="max-w-4xl mx-auto">{children}</div>

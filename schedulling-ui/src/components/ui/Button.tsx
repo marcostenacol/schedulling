@@ -16,8 +16,8 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyle = "px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 flex justify-center items-center";
   const variants = {
     primary: "bg-app-accent text-app-accent-ink hover:opacity-90 focus:ring-app-accent",
-    secondary: "bg-app-surface border border-app-border text-app-ink hover:bg-app-surface-2 focus:ring-gray-500",
-    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500"
+    secondary: "bg-app-surface-2 border border-app-border text-app-ink hover:bg-app-surface focus:ring-app-accent",
+    danger: "bg-app-danger text-white hover:opacity-90 focus:ring-app-danger"
   };
 
   return (

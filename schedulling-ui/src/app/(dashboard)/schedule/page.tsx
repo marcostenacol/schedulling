@@ -25,7 +25,7 @@ export default function SchedulePage() {
     fetchSchedules();
   }, []);
 
-  if (loading) return <div className="flex justify-center py-20 text-blue-600 font-medium">Carregando agenda...</div>;
+  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando agenda...</div>;
 
   return (
     <div className="space-y-8">
@@ -44,24 +44,24 @@ export default function SchedulePage() {
 
         <div className="space-y-6">
           <div className="bg-app-surface p-6 rounded-2xl border border-app-border shadow-app-card">
-            <h3 className="font-bold text-gray-900 mb-4">Detalhes do Agendamento</h3>
+            <h3 className="font-bold text-app-ink mb-4">Detalhes do Agendamento</h3>
             {selectedSchedule ? (
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs text-gray-400 uppercase font-bold tracking-wider">Serviço</label>
-                  <p className="text-gray-900 font-semibold">{selectedSchedule.serviceName}</p>
+                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Serviço</label>
+                  <p className="text-app-ink font-semibold">{selectedSchedule.serviceName}</p>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 uppercase font-bold tracking-wider">Cliente</label>
-                  <p className="text-gray-900">{selectedSchedule.clientName || 'N/A'}</p>
+                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Cliente</label>
+                  <p className="text-app-ink">{selectedSchedule.clientName || 'N/A'}</p>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 uppercase font-bold tracking-wider">Horário</label>
-                  <p className="text-gray-900">{new Date(selectedSchedule.startDateTime).toLocaleString('pt-BR')}</p>
+                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Horário</label>
+                  <p className="text-app-ink">{new Date(selectedSchedule.startDateTime).toLocaleString('pt-BR')}</p>
                 </div>
                 <div className="pt-4">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success/15 text-app-success' :
+                    selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success-soft text-app-success' :
                     selectedSchedule.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-app-surface-2 text-app-muted'
                   }`}>
                     {selectedSchedule.status}
@@ -69,14 +69,14 @@ export default function SchedulePage() {
                 </div>
               </div>
             ) : (
-              <p className="text-gray-400 text-sm italic">Selecione um evento no calendário para ver os detalhes.</p>
+              <p className="text-app-muted text-sm italic">Selecione um evento no calendário para ver os detalhes.</p>
             )}
           </div>
 
           <div className="bg-app-accent p-6 rounded-2xl text-app-accent-ink shadow-app-card">
             <h3 className="font-bold mb-2">Resumo da Semana</h3>
-            <p className="text-blue-100 text-sm">Você tem {schedules.length} agendamentos esta semana.</p>
-            <button className="mt-4 w-full bg-white text-blue-600 py-2 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors">
+            <p className="text-app-accent-ink text-sm">Você tem {schedules.length} agendamentos esta semana.</p>
+            <button className="mt-4 w-full bg-app-surface text-app-accent py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-colors">
               Ver relatórios
             </button>
           </div>

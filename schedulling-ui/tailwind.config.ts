@@ -19,6 +19,7 @@ const config: Config = {
         "app-accent-ink": "var(--accent-ink)",
         "app-accent-soft": "var(--accent-soft)",
         "app-success": "var(--success)",
+        "app-success-soft": "var(--success-soft)",
         "app-danger": "var(--danger)",
       },
       boxShadow: {
