@@ -1,6 +1,7 @@
 # Ambiente AI
 .agents/
 GEMINI.md
+.claude/
 
 # Node / Next.js
 node_modules/
