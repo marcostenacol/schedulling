@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.scheduling.modules.service.dto.ServiceResponseDTO;
 import com.scheduling.modules.service.service.CreateServiceService;
+import com.scheduling.modules.service.service.DeleteServiceService;
+import com.scheduling.modules.service.service.ListPublicServicesService;
 import com.scheduling.modules.service.service.ListServicesService;
 import com.scheduling.modules.service.service.UpdateServiceService;
 import com.scheduling.shared.exception.GlobalExceptionHandler;
@@ -40,6 +42,8 @@ class ServiceControllerTest {
   @MockBean private CreateServiceService createServiceService;
   @MockBean private ListServicesService listServicesService;
   @MockBean private UpdateServiceService updateServiceService;
+  @MockBean private DeleteServiceService deleteServiceService;
+  @MockBean private ListPublicServicesService listPublicServicesService;
   @MockBean private JwtService jwtService;
   @MockBean private AuthFilter authFilter;
 

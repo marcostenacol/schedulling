@@ -14,5 +14,15 @@ export const serviceApi = {
   update: async (id: string, data: UpdateServiceDTO): Promise<ApiResponse<ServiceResponseDTO>> => {
     const response = await apiClient.put<ApiResponse<ServiceResponseDTO>>(`/services/${id}`, data);
     return response.data;
+  },
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    const response = await apiClient.delete<ApiResponse<void>>(`/services/${id}`);
+    return response.data;
+  },
+  listPublic: async (): Promise<ApiResponse<PageResponse<ServiceResponseDTO>>> => {
+    const response = await apiClient.get<ApiResponse<PageResponse<ServiceResponseDTO>>>('/services', {
+      params: { size: 100 },
+    });
+    return response.data;
   }
 };

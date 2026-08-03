@@ -44,6 +44,16 @@ export default function ServicesPage() {
     fetchServices();
   };
 
+  const handleDelete = async (service: ServiceResponseDTO) => {
+    if (!window.confirm(`Excluir o serviço "${service.name}"? Ele deixará de aparecer no catálogo.`)) return;
+    try {
+      await serviceApi.delete(service.id);
+      fetchServices();
+    } catch (err) {
+      console.error('Erro ao excluir serviço', err);
+    }
+  };
+
   if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando serviços...</div>;
 
   return (
@@ -82,10 +92,11 @@ export default function ServicesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map(service => (
-            <ServiceCard 
-              key={service.id} 
-              service={service} 
-              onEdit={() => { setEditingService(service); setShowForm(true); }} 
+            <ServiceCard
+              key={service.id}
+              service={service}
+              onEdit={() => { setEditingService(service); setShowForm(true); }}
+              onDelete={() => handleDelete(service)}
             />
           ))}
         </div>

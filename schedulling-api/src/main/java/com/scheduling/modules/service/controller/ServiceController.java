@@ -9,6 +9,8 @@ import com.scheduling.modules.service.dto.ServiceResponseDTO;
 import com.scheduling.modules.service.dto.UpdateServiceDTO;
 import com.scheduling.modules.service.dto.UpdateServiceRequest;
 import com.scheduling.modules.service.service.CreateServiceService;
+import com.scheduling.modules.service.service.DeleteServiceService;
+import com.scheduling.modules.service.service.ListPublicServicesService;
 import com.scheduling.modules.service.service.ListServicesService;
 import com.scheduling.modules.service.service.UpdateServiceService;
 import jakarta.validation.Valid;
@@ -30,6 +32,15 @@ public class ServiceController extends BaseController {
   private final CreateServiceService createServiceService;
   private final ListServicesService listServicesService;
   private final UpdateServiceService updateServiceService;
+  private final DeleteServiceService deleteServiceService;
+  private final ListPublicServicesService listPublicServicesService;
+
+  @GetMapping
+  public ResponseEntity<ApiResponse<Page<ServiceResponseDTO>>> listPublic(
+      @PageableDefault(size = 20) Pageable pageable) {
+    Page<ServiceResponseDTO> response = listPublicServicesService.execute(pageable);
+    return success("Catálogo de serviços recuperado com sucesso", response);
+  }
 
   @PostMapping
   @PreAuthorize("hasRole('PROVIDER')")
@@ -57,5 +68,13 @@ public class ServiceController extends BaseController {
     ServiceResponseDTO response =
         updateServiceService.execute(new UpdateServiceRequest(id, user, dto));
     return success("Serviço atualizado com sucesso", response);
+  }
+
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('PROVIDER')")
+  public ResponseEntity<ApiResponse<Void>> delete(
+      @PathVariable UUID id, @AuthenticationPrincipal User user) {
+    deleteServiceService.execute(new DeleteServiceService.Input(id, user));
+    return success("Serviço excluído com sucesso", null);
   }
 }

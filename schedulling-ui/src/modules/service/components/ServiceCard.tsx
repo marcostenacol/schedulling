@@ -1,13 +1,14 @@
 import React from 'react';
-import { Clock, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight, Trash2 } from 'lucide-react';
 import { ServiceResponseDTO } from '../dtos/service.dto';
 
 interface ServiceCardProps {
   service: ServiceResponseDTO;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
-export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onEdit }) => {
+export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onEdit, onDelete }) => {
   return (
     <div className="bg-app-surface border border-app-border rounded-xl p-5 shadow-app-card hover:shadow-lg transition-shadow flex flex-col justify-between">
       <div>
@@ -23,13 +24,22 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onEdit }) => 
           </span>
         </div>
       </div>
-      <button
-        onClick={onEdit}
-        className="mt-6 text-sm font-semibold text-app-accent hover:opacity-80 flex items-center gap-1 transition-colors"
-      >
-        Editar serviço
-        <ArrowRight className="h-4 w-4" />
-      </button>
+      <div className="mt-6 flex items-center justify-between">
+        <button
+          onClick={onEdit}
+          className="text-sm font-semibold text-app-accent hover:opacity-80 flex items-center gap-1 transition-colors"
+        >
+          Editar serviço
+          <ArrowRight className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onDelete}
+          className="text-app-muted hover:text-app-danger transition-colors p-1"
+          title="Excluir serviço"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 };
