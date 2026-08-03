@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock, ArrowRight } from 'lucide-react';
 import { ServiceResponseDTO } from '../dtos/service.dto';
 
 interface ServiceCardProps {
@@ -8,30 +9,26 @@ interface ServiceCardProps {
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onEdit }) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+    <div className="bg-app-surface border border-app-border rounded-xl p-5 shadow-app-card hover:shadow-lg transition-shadow flex flex-col justify-between">
       <div>
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-bold text-gray-800">{service.name}</h3>
-          <span className="text-blue-600 font-bold">R$ {service.price.toFixed(2)}</span>
+          <h3 className="text-lg font-bold text-app-ink">{service.name}</h3>
+          <span className="text-app-accent font-bold">R$ {service.price.toFixed(2)}</span>
         </div>
-        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{service.description || 'Sem descrição.'}</p>
-        <div className="flex items-center gap-2 text-xs text-gray-400">
+        <p className="text-app-muted text-sm mb-4 line-clamp-2">{service.description || 'Sem descrição.'}</p>
+        <div className="flex items-center gap-2 text-xs text-app-muted">
           <span className="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Clock className="h-3 w-3" />
             {service.durationMinutes} min
           </span>
         </div>
       </div>
-      <button 
+      <button
         onClick={onEdit}
-        className="mt-6 text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
+        className="mt-6 text-sm font-semibold text-app-accent hover:opacity-80 flex items-center gap-1 transition-colors"
       >
         Editar serviço
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
+        <ArrowRight className="h-4 w-4" />
       </button>
     </div>
   );

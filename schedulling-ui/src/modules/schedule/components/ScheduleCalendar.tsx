@@ -45,7 +45,7 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
   }));
 
   return (
-    <div className="h-[600px] bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+    <div className="h-[600px] bg-app-surface p-4 rounded-2xl shadow-app-card border border-app-border">
       <Calendar
         localizer={localizer}
         events={events}
@@ -62,7 +62,7 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
         }}
         onSelectEvent={onSelectEvent}
         eventPropGetter={() => ({
-          className: 'bg-blue-600 text-white rounded-md border-none text-xs px-2 py-1'
+          className: 'bg-app-accent text-app-accent-ink rounded-md border-none text-xs px-2 py-1'
         })}
       />
     </div>

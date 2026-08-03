@@ -78,6 +78,48 @@ body {
     sans-serif;
 }
 
+/* react-big-calendar tem CSS interno fixo em cores claras (grid, cabeçalho, toolbar) que os
+   utilitários do Tailwind no wrapper não alcançam — sobrescrevendo com as variáveis de tema
+   pra não renderizar um bloco branco fixo dentro de um app em dark mode. */
+:root[data-theme="dark"] .rbc-calendar {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .rbc-off-range-bg {
+  background: var(--surface-2);
+}
+
+:root[data-theme="dark"] .rbc-today {
+  background: var(--accent-soft);
+}
+
+:root[data-theme="dark"] .rbc-header,
+:root[data-theme="dark"] .rbc-month-view,
+:root[data-theme="dark"] .rbc-time-view,
+:root[data-theme="dark"] .rbc-time-header-content,
+:root[data-theme="dark"] .rbc-time-content,
+:root[data-theme="dark"] .rbc-day-bg + .rbc-day-bg,
+:root[data-theme="dark"] .rbc-month-row + .rbc-month-row,
+:root[data-theme="dark"] .rbc-header + .rbc-header,
+:root[data-theme="dark"] .rbc-timeslot-group {
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .rbc-toolbar button {
+  color: var(--ink);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .rbc-toolbar button:hover,
+:root[data-theme="dark"] .rbc-toolbar button.rbc-active {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .rbc-off-range {
+  color: var(--muted);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
