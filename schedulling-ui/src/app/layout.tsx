@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Schedulling",
+  title: "Sked",
   description: "Plataforma de agendamento de serviços",
   icons: {
     icon: "/favicon.svg",
