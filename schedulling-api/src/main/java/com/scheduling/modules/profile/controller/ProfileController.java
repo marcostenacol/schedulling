@@ -4,15 +4,18 @@ import com.scheduling.base.controller.BaseController;
 import com.scheduling.base.traits.ApiResponse;
 import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.profile.dto.ProfileResponseDTO;
+import com.scheduling.modules.profile.dto.UpdateAvatarRequest;
 import com.scheduling.modules.profile.dto.UpdateProfileDTO;
 import com.scheduling.modules.profile.dto.UpdateProfileRequest;
 import com.scheduling.modules.profile.service.DetailProfileService;
+import com.scheduling.modules.profile.service.UpdateAvatarService;
 import com.scheduling.modules.profile.service.UpdateProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/profile")
@@ -21,6 +24,7 @@ public class ProfileController extends BaseController {
 
   private final DetailProfileService detailProfileService;
   private final UpdateProfileService updateProfileService;
+  private final UpdateAvatarService updateAvatarService;
 
   @GetMapping("/me")
   public ResponseEntity<ApiResponse<ProfileResponseDTO>> me(@AuthenticationPrincipal User user) {
@@ -34,5 +38,13 @@ public class ProfileController extends BaseController {
     ProfileResponseDTO response =
         updateProfileService.execute(new UpdateProfileRequest(user.getId(), updateProfileDTO));
     return success("Perfil atualizado com sucesso", response);
+  }
+
+  @PostMapping(value = "/avatar", consumes = "multipart/form-data")
+  public ResponseEntity<ApiResponse<ProfileResponseDTO>> updateAvatar(
+      @AuthenticationPrincipal User user, @RequestParam("avatar") MultipartFile avatar) {
+    ProfileResponseDTO response =
+        updateAvatarService.execute(new UpdateAvatarRequest(user.getId(), avatar));
+    return success("Avatar atualizado com sucesso", response);
   }
 }

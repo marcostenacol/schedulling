@@ -29,7 +29,6 @@ public class UpdateProfileService implements BaseService<UpdateProfileRequest, P
 
     profile.setName(input.getData().getName());
     profile.setBio(input.getData().getBio());
-    profile.setAvatar(input.getData().getAvatar());
 
     profileRepository.save(profile);
 
