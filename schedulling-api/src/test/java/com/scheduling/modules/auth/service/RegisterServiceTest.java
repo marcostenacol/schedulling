@@ -85,6 +85,21 @@ class RegisterServiceTest {
   }
 
   @Test
+  @DisplayName("Deve lançar exceção ao tentar se auto-registrar como administrador")
+  void shouldThrowExceptionWhenRegisteringAsAdmin() {
+    registerDTO.setRole(RoleEnum.ROLE_ADMIN);
+
+    AppException exception =
+        assertThrows(AppException.class, () -> registerService.execute(registerDTO));
+
+    assertEquals("Role inválida ou não encontrada", exception.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+    verify(userRepository, never()).existsByEmail(any());
+    verify(userRepository, never()).save(any(User.class));
+  }
+
+  @Test
   @DisplayName("Deve lançar exceção quando a role não é encontrada")
   void shouldThrowExceptionWhenRoleNotFound() {
     when(userRepository.existsByEmail(registerDTO.getEmail())).thenReturn(false);

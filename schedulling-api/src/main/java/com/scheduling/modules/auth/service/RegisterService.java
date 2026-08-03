@@ -2,6 +2,7 @@ package com.scheduling.modules.auth.service;
 
 import com.scheduling.base.service.BaseService;
 import com.scheduling.modules.auth.dto.RegisterDTO;
+import com.scheduling.modules.auth.enums.RoleEnum;
 import com.scheduling.modules.auth.model.Role;
 import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.auth.repository.RoleRepository;
@@ -27,6 +28,11 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
 
   @Override
   public Void execute(RegisterDTO input) {
+    if (input.getRole() == RoleEnum.ROLE_ADMIN) {
+      log.warn("Tentativa de auto-registro com role de administrador: {}", input.getEmail());
+      throw new AppException("Role inválida ou não encontrada", HttpStatus.BAD_REQUEST);
+    }
+
     if (userRepository.existsByEmail(input.getEmail())) {
       log.warn("Tentativa de registro com email já cadastrado: {}", input.getEmail());
       throw new AppException("Email já cadastrado no sistema", HttpStatus.BAD_REQUEST);

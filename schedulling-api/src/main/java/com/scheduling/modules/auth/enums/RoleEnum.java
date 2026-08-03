@@ -2,7 +2,8 @@ package com.scheduling.modules.auth.enums;
 
 public enum RoleEnum {
   ROLE_CLIENT,
-  ROLE_PROVIDER;
+  ROLE_PROVIDER,
+  ROLE_ADMIN;
 
   /**
    * Representação amigável do papel para uso em campos de negócio (ex.: Profile.type), evitando
@@ -12,6 +13,7 @@ public enum RoleEnum {
     return switch (this) {
       case ROLE_CLIENT -> "client";
       case ROLE_PROVIDER -> "provider";
+      case ROLE_ADMIN -> "admin";
     };
   }
 }
