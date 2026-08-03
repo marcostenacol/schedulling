@@ -42,7 +42,6 @@ export default function ProfilePage() {
             handleUpdated(updated);
             setIsEditing(false);
           }}
-          onAvatarUploaded={handleUpdated}
           onCancel={() => setIsEditing(false)}
           onUpdate={profileApi.update}
         />

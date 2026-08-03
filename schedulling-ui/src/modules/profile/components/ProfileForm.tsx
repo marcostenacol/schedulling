@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 import { Camera } from 'lucide-react';
 import { ProfileResponseDTO, UpdateProfileDTO } from '../dtos/profile.dto';
@@ -13,39 +13,31 @@ import { Button } from '@/components/ui/Button';
 interface ProfileFormProps {
   profile: ProfileResponseDTO;
   onSuccess: (updated: ProfileResponseDTO) => void;
-  onAvatarUploaded: (updated: ProfileResponseDTO) => void;
   onCancel: () => void;
   onUpdate: (data: UpdateProfileDTO) => Promise<ApiResponse<ProfileResponseDTO>>;
 }
 
-export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, onAvatarUploaded, onCancel, onUpdate }) => {
+export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, onCancel, onUpdate }) => {
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio || '');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [avatarUploading, setAvatarUploading] = useState(false);
-  const [avatarError, setAvatarError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const avatarUrl = getAvatarUrl(profile.avatar);
+  useEffect(() => {
+    if (!avatarFile) return;
+    const objectUrl = URL.createObjectURL(avatarFile);
+    setAvatarPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [avatarFile]);
 
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const currentAvatarUrl = avatarPreview || getAvatarUrl(profile.avatar);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    setAvatarUploading(true);
-    setAvatarError('');
-
-    try {
-      const response = await profileApi.uploadAvatar(file);
-      onAvatarUploaded(response.data);
-    } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      setAvatarError(axiosError.response?.data?.message || 'Erro ao enviar avatar.');
-    } finally {
-      setAvatarUploading(false);
-      e.target.value = '';
-    }
+    if (file) setAvatarFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,7 +47,14 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
 
     try {
       const response = await onUpdate({ name, bio });
-      onSuccess(response.data);
+      let updated = response.data;
+
+      if (avatarFile) {
+        const avatarResponse = await profileApi.uploadAvatar(avatarFile);
+        updated = avatarResponse.data;
+      }
+
+      onSuccess(updated);
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;
       setError(axiosError.response?.data?.message || 'Erro ao atualizar perfil.');
@@ -74,12 +73,11 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          disabled={avatarUploading}
           className="relative w-24 h-24 rounded-full bg-app-surface-2 border-4 border-app-accent overflow-hidden flex items-center justify-center group"
         >
-          {avatarUrl ? (
+          {currentAvatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+            <img src={currentAvatarUrl} alt={profile.name} className="w-full h-full object-cover" />
           ) : (
             <span className="text-3xl text-app-muted font-bold">{profile.name.charAt(0).toUpperCase()}</span>
           )}
@@ -94,8 +92,9 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
           onChange={handleAvatarChange}
           className="hidden"
         />
-        <span className="text-xs text-app-muted">{avatarUploading ? 'Enviando...' : 'Clique na foto para trocar o avatar'}</span>
-        {avatarError && <span className="text-xs text-red-500">{avatarError}</span>}
+        <span className="text-xs text-app-muted">
+          {avatarFile ? 'Nova foto selecionada — salve para aplicar' : 'Clique na foto para trocar o avatar'}
+        </span>
       </div>
 
       <Input

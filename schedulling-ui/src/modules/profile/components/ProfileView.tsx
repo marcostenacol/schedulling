@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { ProfileResponseDTO } from '../dtos/profile.dto';
+import { getAvatarUrl } from '@/shared/getAvatarUrl';
 
 interface ProfileViewProps {
   profile: ProfileResponseDTO;
@@ -14,12 +15,14 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => {
+  const avatarUrl = getAvatarUrl(profile.avatar);
+
   return (
     <div className="bg-app-surface border border-app-border shadow-app-card rounded-lg p-6 flex flex-col items-center">
       <div className="w-32 h-32 rounded-full bg-app-surface-2 mb-4 overflow-hidden flex items-center justify-center border-4 border-app-accent">
-        {profile.avatar ? (
+        {avatarUrl ? (
           <Image
-            src={profile.avatar}
+            src={avatarUrl}
             alt={profile.name}
             width={128}
             height={128}
