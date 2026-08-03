@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button';
 
 export const LoginForm = () => {
   const router = useRouter();
-  const setToken = useAuthStore((state) => state.setToken);
+  const setTokens = useAuthStore((state) => state.setTokens);
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +25,7 @@ export const LoginForm = () => {
     try {
       const response = await authApi.login({ email, password });
       if (response.success && response.data.accessToken) {
-        setToken(response.data.accessToken);
+        setTokens(response.data.accessToken, response.data.refreshToken);
         router.push('/schedule');
       }
     } catch (err) {
