@@ -50,12 +50,13 @@ services:
       - shared-network
 
   ui:
-    build: ./schedulling-ui
+    build:
+      context: ./schedulling-ui
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     profiles: ["homolog", "main"]
     ports:
       - "127.0.0.1:3001:3000"
-    environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     networks:
       - shared-network
 
