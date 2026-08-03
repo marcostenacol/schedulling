@@ -75,7 +75,11 @@ public class SecurityConfig {
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(
-        List.of("http://localhost:3001", "http://150.230.75.122:3001", "http://150.230.75.122"));
+        List.of(
+            "http://localhost:3001",
+            "http://150.230.75.122:3001",
+            "http://150.230.75.122",
+            "https://agenda.mvndev.online"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
