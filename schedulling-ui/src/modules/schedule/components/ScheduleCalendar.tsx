@@ -9,6 +9,7 @@ import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt-BR';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { ScheduleResponseDTO } from '../dtos/schedule.dto';
+import { CalendarToolbar } from './CalendarToolbar';
 
 const locales = {
   'pt-BR': ptBR,
@@ -61,6 +62,7 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
           day: "Dia"
         }}
         onSelectEvent={onSelectEvent}
+        components={{ toolbar: CalendarToolbar }}
         eventPropGetter={() => ({
           className: 'bg-app-accent text-app-accent-ink rounded-md border-none text-xs px-2 py-1'
         })}
