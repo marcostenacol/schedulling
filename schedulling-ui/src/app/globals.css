@@ -101,8 +101,30 @@ body {
 :root[data-theme="dark"] .rbc-day-bg + .rbc-day-bg,
 :root[data-theme="dark"] .rbc-month-row + .rbc-month-row,
 :root[data-theme="dark"] .rbc-header + .rbc-header,
-:root[data-theme="dark"] .rbc-timeslot-group {
-  border-color: var(--border);
+:root[data-theme="dark"] .rbc-time-slot,
+:root[data-theme="dark"] .rbc-day-slot .rbc-time-slot,
+:root[data-theme="dark"] .rbc-timeslot-group,
+:root[data-theme="dark"] .rbc-time-header-gutter,
+:root[data-theme="dark"] .rbc-time-gutter,
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table,
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table tbody > tr > td,
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] .rbc-time-gutter .rbc-timeslot-group,
+:root[data-theme="dark"] .rbc-time-header-gutter {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .rbc-agenda-date-cell,
+:root[data-theme="dark"] .rbc-agenda-time-cell {
+  color: var(--muted);
 }
 
 :root[data-theme="dark"] .rbc-toolbar button {
