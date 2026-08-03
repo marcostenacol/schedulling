@@ -9,6 +9,5 @@ export interface ProfileResponseDTO {
 
 export interface UpdateProfileDTO {
   name: string;
-  avatar?: string;
   bio?: string;
 }

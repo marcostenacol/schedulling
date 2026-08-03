@@ -10,5 +10,13 @@ export const profileApi = {
   update: async (data: UpdateProfileDTO): Promise<ApiResponse<ProfileResponseDTO>> => {
     const response = await apiClient.put<ApiResponse<ProfileResponseDTO>>('/profile', data);
     return response.data;
+  },
+  uploadAvatar: async (file: File): Promise<ApiResponse<ProfileResponseDTO>> => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    const response = await apiClient.post<ApiResponse<ProfileResponseDTO>>('/profile/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
   }
 };

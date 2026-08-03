@@ -3,10 +3,13 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/modules/auth/store/auth.store';
+import { useProfileStore } from '@/modules/profile/store/profile.store';
+import { profileApi } from '@/modules/profile/api/profile.api';
 import Sidebar from '@/components/ui/Sidebar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, hasHydrated } = useAuthStore();
+  const setProfile = useProfileStore((state) => state.setProfile);
   const router = useRouter();
 
   useEffect(() => {
@@ -14,6 +17,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.push('/login');
     }
   }, [hasHydrated, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      profileApi.getMe().then((res) => setProfile(res.data)).catch(() => {});
+    }
+  }, [isAuthenticated, setProfile]);
 
   if (!hasHydrated || !isAuthenticated) return null;
 
