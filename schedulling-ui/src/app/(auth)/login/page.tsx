@@ -5,9 +5,9 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center w-full">
       <LoginForm />
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-app-muted">
         Não tem uma conta?{' '}
-        <Link href="/register" className="text-blue-600 hover:text-blue-500 font-medium">
+        <Link href="/register" className="text-app-accent hover:opacity-80 font-medium">
           Registre-se aqui
         </Link>
       </div>

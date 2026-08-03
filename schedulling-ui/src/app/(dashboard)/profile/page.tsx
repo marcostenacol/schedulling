@@ -18,12 +18,12 @@ export default function ProfilePage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="flex justify-center py-20 text-blue-600 font-medium">Carregando perfil...</div>;
+  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando perfil...</div>;
   if (!profile) return <div className="text-red-500">Erro ao carregar dados do perfil.</div>;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Configurações da Conta</h1>
+      <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Configurações da Conta</h1>
       
       {isEditing ? (
         <ProfileForm 

@@ -5,9 +5,9 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col items-center w-full">
       <RegisterForm />
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-app-muted">
         Já tem uma conta?{' '}
-        <Link href="/login" className="text-blue-600 hover:text-blue-500 font-medium">
+        <Link href="/login" className="text-app-accent hover:opacity-80 font-medium">
           Faça login aqui
         </Link>
       </div>

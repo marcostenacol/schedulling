@@ -8,10 +8,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Input: React.FC<InputProps> = ({ label, error, ...props }) => {
   return (
     <div className="flex flex-col gap-1 w-full">
-      {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
+      {label && <label className="text-sm font-medium text-app-muted">{label}</label>}
       <input
-        className={`px-3 py-2 border rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          error ? 'border-red-500' : 'border-gray-300'
+        className={`px-3 py-2 border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent ${
+          error ? 'border-red-500' : 'border-app-border'
         }`}
         {...props}
       />

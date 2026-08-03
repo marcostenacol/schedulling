@@ -38,29 +38,29 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow rounded-lg p-6 flex flex-col gap-4">
-      <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-2">Editar Informações</h2>
-      
+    <form onSubmit={handleSubmit} className="bg-app-surface border border-app-border shadow-app-card rounded-lg p-6 flex flex-col gap-4">
+      <h2 className="text-xl font-bold text-app-ink border-b border-app-border pb-2 mb-2">Editar Informações</h2>
+
       {error && <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>}
 
-      <Input 
-        label="Nome Completo" 
-        value={name} 
-        onChange={(e) => setName(e.target.value)} 
-        required 
+      <Input
+        label="Nome Completo"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
       />
-      
-      <Input 
-        label="URL do Avatar" 
-        value={avatar} 
-        onChange={(e) => setAvatar(e.target.value)} 
+
+      <Input
+        label="URL do Avatar"
+        value={avatar}
+        onChange={(e) => setAvatar(e.target.value)}
         placeholder="https://exemplo.com/foto.jpg"
       />
 
       <div className="flex flex-col gap-1 w-full">
-        <label className="text-sm font-medium text-gray-700">Bio</label>
+        <label className="text-sm font-medium text-app-muted">Bio</label>
         <textarea
-          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+          className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent h-24"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
         />

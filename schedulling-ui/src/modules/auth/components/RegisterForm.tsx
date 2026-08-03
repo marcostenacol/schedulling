@@ -37,7 +37,7 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm">
-      <h2 className="text-2xl font-bold text-center text-gray-800">Criar nova conta</h2>
+      <h2 className="text-2xl font-bold text-center text-app-ink">Criar nova conta</h2>
       
       {error && <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>}
 
@@ -57,9 +57,9 @@ export const RegisterForm = () => {
       />
 
       <div className="flex flex-col gap-1 w-full">
-        <label className="text-sm font-medium text-gray-700">Tipo de conta</label>
-        <select 
-          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <label className="text-sm font-medium text-app-muted">Tipo de conta</label>
+        <select
+          className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
           value={role}
           onChange={(e) => setRole(e.target.value as 'ROLE_CLIENT' | 'ROLE_PROVIDER')}
         >

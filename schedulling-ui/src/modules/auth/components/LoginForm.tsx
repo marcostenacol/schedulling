@@ -38,7 +38,7 @@ export const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm">
-      <h2 className="text-2xl font-bold text-center text-gray-800">Bem-vindo de volta</h2>
+      <h2 className="text-2xl font-bold text-center text-app-ink">Bem-vindo de volta</h2>
       
       {error && <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>}
 

@@ -44,23 +44,23 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ service, onSuccess, on
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg space-y-4 max-w-md w-full">
-      <h2 className="text-xl font-bold text-gray-800">{service ? 'Editar Serviço' : 'Novo Serviço'}</h2>
-      
+    <form onSubmit={handleSubmit} className="bg-app-surface border border-app-border p-6 rounded-xl shadow-app-card space-y-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <h2 className="text-xl font-bold text-app-ink">{service ? 'Editar Serviço' : 'Novo Serviço'}</h2>
+
       {error && <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>}
 
-      <Input 
-        label="Nome do Serviço" 
-        value={name} 
-        onChange={(e) => setName(e.target.value)} 
-        required 
+      <Input
+        label="Nome do Serviço"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
         placeholder="Ex: Corte de Cabelo"
       />
-      
+
       <div className="flex flex-col gap-1 w-full">
-        <label className="text-sm font-medium text-gray-700">Descrição</label>
+        <label className="text-sm font-medium text-app-muted">Descrição</label>
         <textarea
-          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 h-20"
+          className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent h-20"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Descreva brevemente o que está incluído..."
@@ -85,7 +85,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ service, onSuccess, on
         />
       </div>
 
-      <div className="flex gap-2 pt-4 border-t">
+      <div className="flex gap-2 pt-4 border-t border-app-border">
         <Button type="submit" isLoading={loading} className="flex-1">
           {service ? 'Salvar Alterações' : 'Criar Serviço'}
         </Button>
