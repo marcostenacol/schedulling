@@ -1,14 +1,18 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { scheduleApi } from '@/modules/schedule/api/schedule.api';
 import { ScheduleResponseDTO } from '@/modules/schedule/dtos/schedule.dto';
 import { ScheduleCalendar } from '@/modules/schedule/components/ScheduleCalendar';
+import { CreateScheduleModal } from '@/modules/schedule/components/CreateScheduleModal';
+import { Button } from '@/components/ui/Button';
 
 export default function SchedulePage() {
   const [schedules, setSchedules] = useState<ScheduleResponseDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleResponseDTO | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const fetchSchedules = async () => {
     try {
@@ -29,16 +33,22 @@ export default function SchedulePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Minha Agenda</h1>
-        <p className="text-app-muted mt-1">Visualize e gerencie seus próximos compromissos.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Minha Agenda</h1>
+          <p className="text-app-muted mt-1">Visualize e gerencie seus próximos compromissos.</p>
+        </div>
+        <Button onClick={() => setShowCreateModal(true)} className="flex items-center gap-2 shrink-0">
+          <Plus className="h-5 w-5" />
+          Novo Agendamento
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3">
-          <ScheduleCalendar 
-            schedules={schedules} 
-            onSelectEvent={(event) => setSelectedSchedule(event.resource)} 
+          <ScheduleCalendar
+            schedules={schedules}
+            onSelectEvent={(event) => setSelectedSchedule(event.resource)}
           />
         </div>
 
@@ -76,12 +86,16 @@ export default function SchedulePage() {
           <div className="bg-app-accent p-6 rounded-2xl text-app-accent-ink shadow-app-card">
             <h3 className="font-bold mb-2">Resumo da Semana</h3>
             <p className="text-app-accent-ink text-sm">Você tem {schedules.length} agendamentos esta semana.</p>
-            <button className="mt-4 w-full bg-app-surface text-app-accent py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-colors">
-              Ver relatórios
-            </button>
           </div>
         </div>
       </div>
+
+      {showCreateModal && (
+        <CreateScheduleModal
+          onClose={() => setShowCreateModal(false)}
+          onSuccess={() => { setShowCreateModal(false); fetchSchedules(); }}
+        />
+      )}
     </div>
   );
 }

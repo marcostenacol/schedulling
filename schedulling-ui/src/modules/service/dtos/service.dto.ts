@@ -6,6 +6,7 @@ export interface ServiceResponseDTO {
   durationMinutes: number;
   active: boolean;
   providerId: string;
+  providerName?: string;
 }
 
 export interface CreateServiceDTO {

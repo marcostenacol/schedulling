@@ -19,4 +19,5 @@ public class ServiceResponseDTO {
   private Integer durationMinutes;
   private boolean active;
   private UUID providerId;
+  private String providerName;
 }

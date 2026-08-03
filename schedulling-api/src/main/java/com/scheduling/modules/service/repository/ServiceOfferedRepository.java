@@ -22,6 +22,11 @@ public interface ServiceOfferedRepository extends JpaRepository<ServiceOffered, 
 
   List<ServiceOffered> findByActiveTrue();
 
+  @Query(
+      value = "SELECT s FROM ServiceOffered s JOIN FETCH s.provider WHERE s.active = true",
+      countQuery = "SELECT count(s) FROM ServiceOffered s WHERE s.active = true")
+  Page<ServiceOffered> findByActiveTrue(Pageable pageable);
+
   @Query("SELECT s FROM ServiceOffered s JOIN FETCH s.provider WHERE s.id = :id")
   Optional<ServiceOffered> findById(UUID id);
 }
