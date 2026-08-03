@@ -60,7 +60,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ service, onSuccess, on
       <div className="flex flex-col gap-1 w-full">
         <label className="text-sm font-medium text-gray-700">Descrição</label>
         <textarea
-          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 h-20"
+          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 h-20"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Descreva brevemente o que está incluído..."
