@@ -66,7 +66,7 @@ export default function AvailabilityPage() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <form onSubmit={handleAddSlot} className="bg-white p-6 rounded-xl shadow-lg space-y-4 max-w-sm w-full">
+          <form onSubmit={handleAddSlot} className="bg-white p-6 rounded-xl shadow-lg space-y-4 max-w-sm w-full max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold text-gray-800">Novo Horário</h2>
             <p className="text-sm text-gray-500">Configurando para o dia: <span className="font-bold text-blue-600">{['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][selectedDay]}</span></p>
             
