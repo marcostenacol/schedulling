@@ -7,11 +7,15 @@ import { AvailabilityGrid } from '@/modules/availability/components/Availability
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
+const DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
 export default function AvailabilityPage() {
   const [availabilities, setAvailabilities] = useState<AvailabilityResponseDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [mode, setMode] = useState<'recurring' | 'specific'>('recurring');
   const [selectedDay, setSelectedDay] = useState(0);
+  const [specificDate, setSpecificDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('18:00');
   const [submitting, setSubmitting] = useState(false);
@@ -31,12 +35,24 @@ export default function AvailabilityPage() {
     fetchAvailability();
   }, []);
 
+  const openRecurringModal = (day: number) => {
+    setMode('recurring');
+    setSelectedDay(day);
+    setShowModal(true);
+  };
+
+  const openSpecificModal = () => {
+    setMode('specific');
+    setSpecificDate('');
+    setShowModal(true);
+  };
+
   const handleAddSlot = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     try {
       await availabilityApi.set({
-        dayOfWeek: selectedDay,
+        ...(mode === 'recurring' ? { dayOfWeek: selectedDay } : { specificDate }),
         startTime: startTime + ':00',
         endTime: endTime + ':00',
         active: true
@@ -50,25 +66,42 @@ export default function AvailabilityPage() {
     }
   };
 
+  const handleDeleteSlot = async (id: string) => {
+    if (!window.confirm('Remover este horário?')) return;
+    try {
+      await availabilityApi.delete(id);
+      fetchAvailability();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando agenda...</div>;
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Minha Agenda</h1>
-        <p className="text-app-muted mt-1">Defina seus horários de atendimento recorrentes para cada dia da semana.</p>
+        <p className="text-app-muted mt-1">Defina seus horários de atendimento recorrentes ou avulsos.</p>
       </div>
 
-      <AvailabilityGrid 
-        availabilities={availabilities} 
-        onAddSlot={(day) => { setSelectedDay(day); setShowModal(true); }} 
+      <AvailabilityGrid
+        availabilities={availabilities}
+        onAddSlot={openRecurringModal}
+        onAddSpecificSlot={openSpecificModal}
+        onDeleteSlot={handleDeleteSlot}
       />
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <form onSubmit={handleAddSlot} className="bg-app-surface border border-app-border p-6 rounded-xl shadow-app-card space-y-4 max-w-sm w-full max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold text-app-ink">Novo Horário</h2>
-            <p className="text-sm text-app-muted">Configurando para o dia: <span className="font-bold text-app-accent">{['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][selectedDay]}</span></p>
+
+            {mode === 'recurring' ? (
+              <p className="text-sm text-app-muted">Configurando para o dia: <span className="font-bold text-app-accent">{DAYS[selectedDay]}</span></p>
+            ) : (
+              <Input label="Data" type="date" value={specificDate} onChange={e => setSpecificDate(e.target.value)} required />
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <Input label="Início" type="time" value={startTime} onChange={e => setStartTime(e.target.value)} required />

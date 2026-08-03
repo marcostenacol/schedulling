@@ -2,6 +2,7 @@ package com.scheduling.modules.availability.model;
 
 import com.scheduling.modules.auth.model.User;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -36,4 +37,10 @@ public class Availability {
 
   @Column(nullable = false)
   private boolean active = true;
+
+  /**
+   * Quando preenchido, esta disponibilidade vale só nesta data específica (avulsa), não toda
+   * semana — {@code dayOfWeek} continua preenchido (derivado da data) só pra exibição/consulta.
+   */
+  @Column private LocalDate specificDate;
 }

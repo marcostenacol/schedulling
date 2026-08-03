@@ -28,6 +28,7 @@ public class ListAvailabilityService implements BaseService<UUID, List<Availabil
                 AvailabilityResponseDTO.builder()
                     .id(a.getId())
                     .dayOfWeek(a.getDayOfWeek())
+                    .specificDate(a.getSpecificDate())
                     .startTime(a.getStartTime())
                     .endTime(a.getEndTime())
                     .active(a.isActive())

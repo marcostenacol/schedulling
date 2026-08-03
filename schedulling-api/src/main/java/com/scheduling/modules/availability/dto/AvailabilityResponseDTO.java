@@ -1,5 +1,6 @@
 package com.scheduling.modules.availability.dto;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class AvailabilityResponseDTO {
   private UUID id;
   private Integer dayOfWeek;
+  private LocalDate specificDate;
   private LocalTime startTime;
   private LocalTime endTime;
   private boolean active;
