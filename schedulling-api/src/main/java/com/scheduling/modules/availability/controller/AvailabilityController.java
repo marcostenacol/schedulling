@@ -8,6 +8,7 @@ import com.scheduling.modules.availability.dto.AvailabilityResponseDTO;
 import com.scheduling.modules.availability.dto.BlockAvailabilityDTO;
 import com.scheduling.modules.availability.dto.GetAvailableSlotsRequest;
 import com.scheduling.modules.availability.service.BlockAvailabilityService;
+import com.scheduling.modules.availability.service.DeleteAvailabilityService;
 import com.scheduling.modules.availability.service.GetAvailableSlotsService;
 import com.scheduling.modules.availability.service.ListAvailabilityService;
 import com.scheduling.modules.availability.service.SetAvailabilityService;
@@ -32,6 +33,7 @@ public class AvailabilityController extends BaseController {
   private final ListAvailabilityService listAvailabilityService;
   private final BlockAvailabilityService blockAvailabilityService;
   private final GetAvailableSlotsService getAvailableSlotsService;
+  private final DeleteAvailabilityService deleteAvailabilityService;
 
   @PostMapping
   @PreAuthorize("hasRole('PROVIDER')")
@@ -48,6 +50,14 @@ public class AvailabilityController extends BaseController {
       @AuthenticationPrincipal User user) {
     List<AvailabilityResponseDTO> response = listAvailabilityService.execute(user.getId());
     return success("Disponibilidades recuperadas", response);
+  }
+
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('PROVIDER')")
+  public ResponseEntity<ApiResponse<Void>> delete(
+      @PathVariable UUID id, @AuthenticationPrincipal User user) {
+    deleteAvailabilityService.execute(new DeleteAvailabilityService.Input(id, user));
+    return success("Disponibilidade excluída com sucesso", null);
   }
 
   @PostMapping("/block")

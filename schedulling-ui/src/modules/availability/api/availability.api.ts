@@ -11,6 +11,10 @@ export const availabilityApi = {
     const response = await apiClient.get<ApiResponse<AvailabilityResponseDTO[]>>('/availability/me');
     return response.data;
   },
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    const response = await apiClient.delete<ApiResponse<void>>(`/availability/${id}`);
+    return response.data;
+  },
   block: async (data: BlockAvailabilityDTO): Promise<ApiResponse<void>> => {
     const response = await apiClient.post<ApiResponse<void>>('/availability/block', data);
     return response.data;
