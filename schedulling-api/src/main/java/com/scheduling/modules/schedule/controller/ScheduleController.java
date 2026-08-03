@@ -5,9 +5,12 @@ import com.scheduling.base.traits.ApiResponse;
 import com.scheduling.modules.auth.model.User;
 import com.scheduling.modules.schedule.dto.CreateScheduleDTO;
 import com.scheduling.modules.schedule.dto.ScheduleResponseDTO;
+import com.scheduling.modules.schedule.dto.UpdateScheduleStatusDTO;
 import com.scheduling.modules.schedule.service.CreateScheduleService;
 import com.scheduling.modules.schedule.service.ListSchedulesService;
+import com.scheduling.modules.schedule.service.UpdateScheduleStatusService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,7 @@ public class ScheduleController extends BaseController {
 
   private final CreateScheduleService createScheduleService;
   private final ListSchedulesService listSchedulesService;
+  private final UpdateScheduleStatusService updateScheduleStatusService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<ScheduleResponseDTO>> create(
@@ -38,5 +42,15 @@ public class ScheduleController extends BaseController {
     Page<ScheduleResponseDTO> response =
         listSchedulesService.execute(new ListSchedulesService.Input(user, pageable));
     return success("Agendamentos recuperados com sucesso", response);
+  }
+
+  @PatchMapping("/{id}/status")
+  public ResponseEntity<ApiResponse<ScheduleResponseDTO>> updateStatus(
+      @PathVariable UUID id,
+      @AuthenticationPrincipal User user,
+      @Valid @RequestBody UpdateScheduleStatusDTO dto) {
+    ScheduleResponseDTO response =
+        updateScheduleStatusService.execute(new UpdateScheduleStatusService.Input(id, user, dto));
+    return success("Status do agendamento atualizado com sucesso", response);
   }
 }

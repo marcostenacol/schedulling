@@ -11,6 +11,7 @@ import com.scheduling.modules.schedule.dto.ScheduleResponseDTO;
 import com.scheduling.modules.schedule.model.ScheduleStatus;
 import com.scheduling.modules.schedule.service.CreateScheduleService;
 import com.scheduling.modules.schedule.service.ListSchedulesService;
+import com.scheduling.modules.schedule.service.UpdateScheduleStatusService;
 import com.scheduling.shared.exception.GlobalExceptionHandler;
 import com.scheduling.shared.security.AuthFilter;
 import com.scheduling.shared.security.JwtService;
@@ -44,6 +45,7 @@ class ScheduleControllerTest {
 
   @MockBean private CreateScheduleService createScheduleService;
   @MockBean private ListSchedulesService listSchedulesService;
+  @MockBean private UpdateScheduleStatusService updateScheduleStatusService;
   @MockBean private JwtService jwtService;
   @MockBean private AuthFilter authFilter;
 

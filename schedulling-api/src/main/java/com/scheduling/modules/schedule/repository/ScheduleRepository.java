@@ -4,6 +4,7 @@ import com.scheduling.modules.schedule.model.Schedule;
 import com.scheduling.modules.schedule.model.ScheduleStatus;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
+
+  @Query(
+      "SELECT s FROM Schedule s JOIN FETCH s.client JOIN FETCH s.provider JOIN FETCH s.service "
+          + "WHERE s.id = :id")
+  Optional<Schedule> findByIdWithRelations(UUID id);
 
   @Query(
       value =
