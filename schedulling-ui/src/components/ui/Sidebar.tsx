@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { ChevronDown, Sun, Moon, LogOut, Languages } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/store/auth.store';
 import { useTheme } from '@/hooks/useTheme';
 import { useLocale, SUPPORTED_LOCALES } from '@/i18n/LocaleContext';
@@ -23,7 +24,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="bg-app-surface border border-app-border rounded-2xl shadow-app-card p-3 md:p-4 w-full md:w-52 md:shrink-0 flex flex-col gap-3">
+    <aside className="bg-app-surface border border-app-border rounded-2xl shadow-app-card p-3 md:p-4 w-full md:w-52 md:shrink-0 md:h-[calc(100vh-2rem)] md:sticky md:top-4 flex flex-col gap-3">
       <nav className="flex flex-row md:flex-col gap-1 overflow-x-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
@@ -43,16 +44,22 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="flex flex-row md:flex-col gap-1 pt-3 border-t border-app-border">
+      <div className="hidden md:block flex-1" />
+
+      <div className="flex flex-col gap-2 pt-3 border-t border-app-border">
         <div className="relative">
           <button
             onClick={() => setLangMenuOpen((prev) => !prev)}
-            className="w-full whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold uppercase text-left text-app-muted hover:bg-app-surface-2 transition-colors"
+            className="w-full flex items-center justify-between gap-2 rounded-lg border border-app-border px-3 py-2 text-sm font-semibold text-app-muted hover:bg-app-surface-2 transition-colors"
           >
-            {locale}
+            <span className="flex items-center gap-2">
+              <Languages className="w-4 h-4" />
+              <span className="uppercase">{locale}</span>
+            </span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${langMenuOpen ? 'rotate-180' : ''}`} />
           </button>
           {langMenuOpen && (
-            <div className="absolute z-10 top-full mt-1 left-0 w-24 bg-app-surface border border-app-border rounded-lg shadow-app-card overflow-hidden">
+            <div className="absolute z-10 bottom-full mb-1 md:bottom-auto md:top-full md:mb-0 md:mt-1 left-0 w-full bg-app-surface border border-app-border rounded-lg shadow-app-card overflow-hidden">
               {SUPPORTED_LOCALES.map((lng) => (
                 <button
                   key={lng}
@@ -70,15 +77,17 @@ export default function Sidebar() {
 
         <button
           onClick={toggleTheme}
-          className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-left text-app-muted hover:bg-app-surface-2 transition-colors"
+          className="w-full flex items-center gap-2 rounded-lg border border-app-border px-3 py-2 text-sm font-semibold text-app-muted hover:bg-app-surface-2 transition-colors"
         >
+          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           {theme === 'dark' ? t.nav.themeLight : t.nav.themeDark}
         </button>
 
         <button
           onClick={() => { logout(); router.push('/login'); }}
-          className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-left text-app-muted hover:text-app-danger transition-colors"
+          className="w-full flex items-center gap-2 rounded-lg border border-app-border px-3 py-2 text-sm font-semibold text-app-muted hover:text-app-danger hover:border-app-danger/40 transition-colors"
         >
+          <LogOut className="w-4 h-4" />
           {t.nav.signOut}
         </button>
       </div>
