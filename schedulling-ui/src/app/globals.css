@@ -105,10 +105,7 @@ body {
 :root[data-theme="dark"] .rbc-day-slot .rbc-time-slot,
 :root[data-theme="dark"] .rbc-timeslot-group,
 :root[data-theme="dark"] .rbc-time-header-gutter,
-:root[data-theme="dark"] .rbc-time-gutter,
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table,
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table tbody > tr > td,
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+:root[data-theme="dark"] .rbc-time-gutter {
   border-color: var(--border) !important;
 }
 
@@ -118,14 +115,55 @@ body {
   color: var(--muted);
 }
 
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table,
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table tbody > tr > td,
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table thead > tr > th,
-:root[data-theme="dark"] .rbc-agenda-date-cell,
-:root[data-theme="dark"] .rbc-agenda-time-cell,
-:root[data-theme="dark"] .rbc-agenda-event-cell {
+/* Aba "Agenda" (lista) — a lib entrega uma <table> HTML com bordas cruas de navegador; troca
+   por um visual de lista com linhas separadas por um filete só, cabeçalho discreto e hover,
+   igual ao resto do app em vez de parecer uma planilha sem estilo. */
+.rbc-agenda-view {
+  border: none !important;
+}
+
+.rbc-agenda-view table.rbc-agenda-table {
+  border: none !important;
+  border-collapse: collapse;
+  color: var(--ink);
+  background: transparent;
+}
+
+.rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+  border: none !important;
+  border-bottom: 2px solid var(--border) !important;
+  padding: 10px 12px !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: transparent !important;
+  text-align: left;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 12px !important;
   color: var(--ink) !important;
-  background: var(--surface) !important;
+  background: transparent !important;
+  vertical-align: middle;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody > tr:hover > td {
+  background: var(--surface-2) !important;
+}
+
+.rbc-agenda-date-cell {
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--ink) !important;
+}
+
+.rbc-agenda-time-cell {
+  color: var(--muted) !important;
+  white-space: nowrap;
 }
 
 :root[data-theme="dark"] .rbc-toolbar button {
@@ -184,22 +222,20 @@ body {
    parecem só uma tag de texto colorida, não um item interativo. */
 .rbc-event {
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  background: var(--surface-2) !important;
+  color: var(--ink) !important;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 
 .rbc-event:hover,
 .rbc-event:focus {
-  filter: brightness(1.12);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  background: var(--accent-soft) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   transform: translateY(-1px);
 }
 
 .rbc-event.rbc-selected {
   box-shadow: 0 0 0 2px var(--accent);
-}
-
-.rbc-day-slot .rbc-event {
-  border-left: 3px solid rgba(255, 255, 255, 0.6) !important;
 }
 
 @layer utilities {

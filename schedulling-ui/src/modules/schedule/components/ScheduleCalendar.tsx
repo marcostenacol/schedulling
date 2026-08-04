@@ -18,6 +18,13 @@ const STATUS_COLOR: Record<ScheduleStatus, string> = {
   [ScheduleStatus.COMPLETED]: '#16a34a',
 };
 
+const STATUS_LABEL: Record<ScheduleStatus, string> = {
+  [ScheduleStatus.PENDING]: 'Pendente',
+  [ScheduleStatus.CONFIRMED]: 'Confirmado',
+  [ScheduleStatus.CANCELLED]: 'Cancelado',
+  [ScheduleStatus.COMPLETED]: 'Concluído',
+};
+
 const locales = {
   'pt-BR': ptBR,
 };
@@ -80,17 +87,35 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
           toolbar: CalendarToolbar,
           event: ({ event }) => (
             <div className="flex items-center gap-1.5 overflow-hidden">
+              <span
+                className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: STATUS_COLOR[event.resource.status] }}
+              />
               <span className="font-semibold shrink-0">{format(event.start, 'HH:mm')}</span>
               <span className="truncate opacity-90">{event.resource.serviceName}</span>
             </div>
           ),
-        }}
-        eventPropGetter={(event) => ({
-          className: 'rbc-event-status rounded-md border-none text-xs px-2 py-1 cursor-pointer',
-          style: {
-            backgroundColor: STATUS_COLOR[event.resource.status],
-            color: '#fff',
+          agenda: {
+            event: ({ event }) => (
+              <div className="flex items-center gap-2 py-1 cursor-pointer">
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: STATUS_COLOR[event.resource.status] }}
+                />
+                <span className="font-semibold text-app-ink">{event.resource.serviceName}</span>
+                <span className="text-app-muted">— {event.resource.clientName || 'Cliente'}</span>
+                <span
+                  className="ml-auto shrink-0 px-2 py-0.5 rounded-full text-xs font-semibold"
+                  style={{ backgroundColor: `${STATUS_COLOR[event.resource.status]}22`, color: STATUS_COLOR[event.resource.status] }}
+                >
+                  {STATUS_LABEL[event.resource.status]}
+                </span>
+              </div>
+            ),
           },
+        }}
+        eventPropGetter={() => ({
+          className: 'rbc-event-status rounded-md border-none text-xs px-2 py-1 cursor-pointer',
         })}
       />
     </div>
