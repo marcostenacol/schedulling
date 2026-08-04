@@ -7,20 +7,26 @@ import com.scheduling.modules.service.model.ServiceOffered;
 import com.scheduling.modules.service.repository.ServiceOfferedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-/** Catálogo público de serviços ativos — usado pelo cliente para descobrir prestadores. */
+/**
+ * Serviços públicos de UM prestador específico — usado por quem já tem o código/link do
+ * prestador. Deliberadamente não existe um "listar todos os serviços de todos os prestadores":
+ * exporia a base inteira de prestadores pra qualquer usuário autenticado, então a busca sempre
+ * exige saber de antemão o {@code providerId} (ver {@link ListPublicServicesService.Input}).
+ */
 @Service
 @RequiredArgsConstructor
-public class ListPublicServicesService implements BaseService<Pageable, Page<ServiceResponseDTO>> {
+public class ListPublicServicesService
+    implements BaseService<ListPublicServicesService.Input, Page<ServiceResponseDTO>> {
 
   private final ServiceOfferedRepository repository;
   private final ProfileRepository profileRepository;
 
   @Override
-  public Page<ServiceResponseDTO> execute(Pageable pageable) {
-    Page<ServiceOffered> services = repository.findByActiveTrue(pageable);
+  public Page<ServiceResponseDTO> execute(Input input) {
+    Page<ServiceOffered> services =
+        repository.findByProviderIdAndActiveTrue(input.providerId(), input.pageable());
 
     return services.map(this::toResponseDTO);
   }
@@ -30,7 +36,7 @@ public class ListPublicServicesService implements BaseService<Pageable, Page<Ser
         profileRepository
             .findByUserId(s.getProvider().getId())
             .map(p -> p.getName())
-            .orElse(s.getProvider().getEmail());
+            .orElseGet(() -> s.getProvider().getEmail());
 
     return ServiceResponseDTO.builder()
         .id(s.getId())
@@ -43,4 +49,6 @@ public class ListPublicServicesService implements BaseService<Pageable, Page<Ser
         .providerName(providerName)
         .build();
   }
+
+  public record Input(java.util.UUID providerId, org.springframework.data.domain.Pageable pageable) {}
 }

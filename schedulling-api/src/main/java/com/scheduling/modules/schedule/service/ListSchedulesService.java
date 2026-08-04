@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class ListSchedulesService
   private final ProfileRepository profileRepository;
 
   @Override
+  @Transactional(readOnly = true)
   public Page<ScheduleResponseDTO> execute(Input input) {
     User user = input.user();
     Pageable pageable = input.pageable();
@@ -47,12 +49,12 @@ public class ListSchedulesService
             : profileRepository
                 .findByUserId(s.getClient().getId())
                 .map(p -> p.getName())
-                .orElse(s.getClient().getEmail());
+                .orElseGet(() -> s.getClient().getEmail());
     String providerName =
         profileRepository
             .findByUserId(s.getProvider().getId())
             .map(p -> p.getName())
-            .orElse(s.getProvider().getEmail());
+            .orElseGet(() -> s.getProvider().getEmail());
 
     return ScheduleResponseDTO.builder()
         .id(s.getId())

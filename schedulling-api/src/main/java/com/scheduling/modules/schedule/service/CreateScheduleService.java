@@ -56,8 +56,13 @@ public class CreateScheduleService
             .findById(input.getData().getProviderId())
             .orElseThrow(() -> new AppException("Prestador não encontrado", HttpStatus.NOT_FOUND));
 
+    int duration =
+        input.getData().getDurationMinutes() != null
+            ? input.getData().getDurationMinutes()
+            : service.getDurationMinutes();
+
     LocalDateTime start = input.getData().getStartDateTime();
-    LocalDateTime end = start.plusMinutes(service.getDurationMinutes());
+    LocalDateTime end = start.plusMinutes(duration);
 
     // 1. Validar conflitos com outros agendamentos
     if (!scheduleRepository.findOverlappingSchedules(provider.getId(), start, end).isEmpty()) {
@@ -108,12 +113,12 @@ public class CreateScheduleService
             : profileRepository
                 .findByUserId(saved.getClient().getId())
                 .map(p -> p.getName())
-                .orElse(saved.getClient().getEmail());
+                .orElseGet(() -> saved.getClient().getEmail());
     String providerName =
         profileRepository
             .findByUserId(saved.getProvider().getId())
             .map(p -> p.getName())
-            .orElse(saved.getProvider().getEmail());
+            .orElseGet(() -> saved.getProvider().getEmail());
 
     return ScheduleResponseDTO.builder()
         .id(saved.getId())

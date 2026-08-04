@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -39,6 +40,7 @@ public class UpdateScheduleStatusService
   }
 
   @Override
+  @Transactional
   public ScheduleResponseDTO execute(Input input) {
     Schedule schedule =
         repository
@@ -79,12 +81,12 @@ public class UpdateScheduleStatusService
             : profileRepository
                 .findByUserId(updated.getClient().getId())
                 .map(p -> p.getName())
-                .orElse(updated.getClient().getEmail());
+                .orElseGet(() -> updated.getClient().getEmail());
     String providerName =
         profileRepository
             .findByUserId(updated.getProvider().getId())
             .map(p -> p.getName())
-            .orElse(updated.getProvider().getEmail());
+            .orElseGet(() -> updated.getProvider().getEmail());
 
     return ScheduleResponseDTO.builder()
         .id(updated.getId())
