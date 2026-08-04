@@ -43,6 +43,7 @@ class RegisterServiceTest {
   @BeforeEach
   void setUp() {
     registerDTO = new RegisterDTO();
+    registerDTO.setName("Teste");
     registerDTO.setEmail("test@example.com");
     registerDTO.setPassword("password123");
     registerDTO.setRole(RoleEnum.ROLE_CLIENT);

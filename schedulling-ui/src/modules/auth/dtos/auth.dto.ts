@@ -4,6 +4,7 @@ export interface LoginDTO {
 }
 
 export interface RegisterDTO {
+  name: string;
   email: string;
   password: string;
   role: 'ROLE_CLIENT' | 'ROLE_PROVIDER';

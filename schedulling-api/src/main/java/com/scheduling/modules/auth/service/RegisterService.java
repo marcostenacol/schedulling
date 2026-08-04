@@ -56,7 +56,7 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
     Profile profile =
         Profile.builder()
             .user(savedUser)
-            .name(savedUser.getEmail().split("@")[0]) // Nome inicial baseado no email
+            .name(input.getName())
             .type(input.getRole().toProfileType())
             .build();
 
