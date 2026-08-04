@@ -16,4 +16,9 @@ public interface ProfileRepository extends JpaRepository<Profile, UUID> {
 
   @Query("SELECT p FROM Profile p JOIN FETCH p.user WHERE p.user.id = :userId")
   Optional<Profile> findByUserId(UUID userId);
+
+  @Query("SELECT p FROM Profile p JOIN FETCH p.user WHERE p.code = :code")
+  Optional<Profile> findByCode(String code);
+
+  boolean existsByCode(String code);
 }

@@ -1,19 +1,23 @@
 package com.scheduling.modules.service.service;
 
 import com.scheduling.base.service.BaseService;
+import com.scheduling.modules.profile.model.Profile;
 import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.modules.service.dto.ServiceResponseDTO;
 import com.scheduling.modules.service.model.ServiceOffered;
 import com.scheduling.modules.service.repository.ServiceOfferedRepository;
+import com.scheduling.shared.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
- * Serviços públicos de UM prestador específico — usado por quem já tem o código/link do
- * prestador. Deliberadamente não existe um "listar todos os serviços de todos os prestadores":
- * exporia a base inteira de prestadores pra qualquer usuário autenticado, então a busca sempre
- * exige saber de antemão o {@code providerId} (ver {@link ListPublicServicesService.Input}).
+ * Serviços públicos de UM prestador específico — usado por quem já tem o código curto do prestador
+ * (ver {@link Profile#getCode()}). Deliberadamente não existe um "listar todos os serviços de todos
+ * os prestadores": exporia a base inteira de prestadores pra qualquer usuário autenticado, então a
+ * busca sempre exige saber de antemão o código do prestador (ver {@link
+ * ListPublicServicesService.Input}).
  */
 @Service
 @RequiredArgsConstructor
@@ -25,8 +29,13 @@ public class ListPublicServicesService
 
   @Override
   public Page<ServiceResponseDTO> execute(Input input) {
+    Profile provider =
+        profileRepository
+            .findByCode(input.providerCode().trim().toUpperCase())
+            .orElseThrow(() -> new AppException("Prestador não encontrado", HttpStatus.NOT_FOUND));
+
     Page<ServiceOffered> services =
-        repository.findByProviderIdAndActiveTrue(input.providerId(), input.pageable());
+        repository.findByProviderIdAndActiveTrue(provider.getUser().getId(), input.pageable());
 
     return services.map(this::toResponseDTO);
   }
@@ -50,5 +59,5 @@ public class ListPublicServicesService
         .build();
   }
 
-  public record Input(java.util.UUID providerId, org.springframework.data.domain.Pageable pageable) {}
+  public record Input(String providerCode, org.springframework.data.domain.Pageable pageable) {}
 }

@@ -10,6 +10,7 @@ import com.scheduling.modules.auth.repository.UserRepository;
 import com.scheduling.modules.profile.model.Profile;
 import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.shared.exception.AppException;
+import java.security.SecureRandom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RegisterService implements BaseService<RegisterDTO, Void> {
+
+  private static final String CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  private static final int CODE_LENGTH = 6;
+  private static final SecureRandom RANDOM = new SecureRandom();
 
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
@@ -58,6 +63,7 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
             .user(savedUser)
             .name(input.getName())
             .type(input.getRole().toProfileType())
+            .code(generateUniqueCode())
             .build();
 
     profileRepository.save(profile);
@@ -65,5 +71,21 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
     log.info("Novo usuário registrado id={}, role={}", savedUser.getId(), role.getName());
 
     return null;
+  }
+
+  private String generateUniqueCode() {
+    String code;
+    do {
+      code = randomCode();
+    } while (profileRepository.existsByCode(code));
+    return code;
+  }
+
+  private String randomCode() {
+    StringBuilder sb = new StringBuilder(CODE_LENGTH);
+    for (int i = 0; i < CODE_LENGTH; i++) {
+      sb.append(CODE_ALPHABET.charAt(RANDOM.nextInt(CODE_ALPHABET.length())));
+    }
+    return sb.toString();
   }
 }

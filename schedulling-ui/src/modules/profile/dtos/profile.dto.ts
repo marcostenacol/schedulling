@@ -6,6 +6,7 @@ export interface ProfileResponseDTO {
   avatar?: string;
   bio?: string;
   type: string;
+  code: string;
 }
 
 export interface UpdateProfileDTO {

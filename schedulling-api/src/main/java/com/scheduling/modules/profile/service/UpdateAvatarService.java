@@ -60,6 +60,7 @@ public class UpdateAvatarService implements BaseService<UpdateAvatarRequest, Pro
         .avatar(profile.getAvatar())
         .bio(profile.getBio())
         .type(profile.getType())
+        .code(profile.getCode())
         .build();
   }
 

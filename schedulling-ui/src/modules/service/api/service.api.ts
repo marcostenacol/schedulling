@@ -20,9 +20,9 @@ export const serviceApi = {
     return response.data;
   },
   /** Lista os serviços de UM prestador específico — não existe um catálogo aberto de todos. */
-  listByProvider: async (providerId: string): Promise<ApiResponse<PageResponse<ServiceResponseDTO>>> => {
+  listByProvider: async (providerCode: string): Promise<ApiResponse<PageResponse<ServiceResponseDTO>>> => {
     const response = await apiClient.get<ApiResponse<PageResponse<ServiceResponseDTO>>>('/services', {
-      params: { providerId, size: 100 },
+      params: { providerCode, size: 100 },
     });
     return response.data;
   }

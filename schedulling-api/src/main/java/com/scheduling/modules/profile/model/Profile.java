@@ -38,6 +38,9 @@ public class Profile {
   @Column(nullable = false)
   private String type; // ex: provider, client
 
+  @Column(nullable = false, unique = true, length = 6)
+  private String code;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

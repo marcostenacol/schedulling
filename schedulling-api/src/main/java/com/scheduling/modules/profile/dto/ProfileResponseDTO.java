@@ -18,4 +18,5 @@ public class ProfileResponseDTO {
   private String avatar;
   private String bio;
   private String type;
+  private String code;
 }

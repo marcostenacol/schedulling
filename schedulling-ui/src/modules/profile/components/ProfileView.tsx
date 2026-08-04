@@ -21,7 +21,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
   const isProvider = profile.type === 'provider' || profile.type === 'admin';
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(profile.userId);
+    navigator.clipboard.writeText(profile.code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -55,9 +55,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
           </h3>
           <button
             onClick={handleCopyCode}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-app-surface-2 border border-app-border rounded-md text-app-ink text-xs font-mono hover:border-app-accent transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-app-surface-2 border border-app-border rounded-md text-app-ink text-lg font-mono font-bold tracking-[0.3em] hover:border-app-accent transition-colors"
           >
-            <span className="truncate">{profile.userId}</span>
+            <span>{profile.code}</span>
             {copied ? <Check className="w-4 h-4 text-app-success shrink-0" /> : <Copy className="w-4 h-4 text-app-muted shrink-0" />}
           </button>
         </div>

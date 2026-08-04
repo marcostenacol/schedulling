@@ -42,6 +42,7 @@ public class UpdateProfileService implements BaseService<UpdateProfileRequest, P
         .avatar(profile.getAvatar())
         .bio(profile.getBio())
         .type(profile.getType())
+        .code(profile.getCode())
         .build();
   }
 }

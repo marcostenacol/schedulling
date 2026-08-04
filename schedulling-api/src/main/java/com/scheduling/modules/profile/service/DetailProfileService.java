@@ -33,6 +33,7 @@ public class DetailProfileService implements BaseService<UUID, ProfileResponseDT
         .avatar(profile.getAvatar())
         .bio(profile.getBio())
         .type(profile.getType())
+        .code(profile.getCode())
         .build();
   }
 }
