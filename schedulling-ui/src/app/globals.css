@@ -118,13 +118,14 @@ body {
   color: var(--muted);
 }
 
-:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table {
-  color: var(--ink);
-}
-
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table,
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table tbody > tr > td,
+:root[data-theme="dark"] .rbc-agenda-view table.rbc-agenda-table thead > tr > th,
 :root[data-theme="dark"] .rbc-agenda-date-cell,
-:root[data-theme="dark"] .rbc-agenda-time-cell {
-  color: var(--muted);
+:root[data-theme="dark"] .rbc-agenda-time-cell,
+:root[data-theme="dark"] .rbc-agenda-event-cell {
+  color: var(--ink) !important;
+  background: var(--surface) !important;
 }
 
 :root[data-theme="dark"] .rbc-toolbar button {

@@ -59,7 +59,14 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
           today: "Hoje",
           month: "Mês",
           week: "Semana",
-          day: "Dia"
+          day: "Dia",
+          agenda: "Agenda",
+          date: "Data",
+          time: "Horário",
+          event: "Evento",
+          allDay: "Dia inteiro",
+          noEventsInRange: "Nenhum agendamento neste período.",
+          showMore: (total) => `+ ${total} mais`
         }}
         onSelectEvent={onSelectEvent}
         components={{ toolbar: CalendarToolbar }}
