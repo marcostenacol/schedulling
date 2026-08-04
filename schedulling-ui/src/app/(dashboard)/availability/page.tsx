@@ -1,15 +1,20 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { availabilityApi } from '@/modules/availability/api/availability.api';
 import { AvailabilityResponseDTO } from '@/modules/availability/dtos/availability.dto';
 import { AvailabilityGrid } from '@/modules/availability/components/AvailabilityGrid';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useProfileStore } from '@/modules/profile/store/profile.store';
 
 const DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
 export default function AvailabilityPage() {
+  const router = useRouter();
+  const profile = useProfileStore((state) => state.profile);
+  const isProvider = profile?.type === 'provider' || profile?.type === 'admin';
   const [availabilities, setAvailabilities] = useState<AvailabilityResponseDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -32,8 +37,13 @@ export default function AvailabilityPage() {
   };
 
   useEffect(() => {
-    fetchAvailability();
-  }, []);
+    if (profile && !isProvider) {
+      router.replace('/schedule');
+      return;
+    }
+    if (isProvider) fetchAvailability();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile, isProvider, router]);
 
   const openRecurringModal = (day: number) => {
     setMode('recurring');
@@ -76,6 +86,7 @@ export default function AvailabilityPage() {
     }
   };
 
+  if (profile && !isProvider) return null;
   if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando agenda...</div>;
 
   return (

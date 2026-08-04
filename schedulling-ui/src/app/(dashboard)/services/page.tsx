@@ -1,18 +1,29 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, PackageSearch } from 'lucide-react';
 import { serviceApi } from '@/modules/service/api/service.api';
 import { ServiceResponseDTO, CreateServiceDTO, UpdateServiceDTO } from '@/modules/service/dtos/service.dto';
 import { ServiceCard } from '@/modules/service/components/ServiceCard';
 import { ServiceForm } from '@/modules/service/components/ServiceForm';
 import { Button } from '@/components/ui/Button';
+import { useProfileStore } from '@/modules/profile/store/profile.store';
 
 export default function ServicesPage() {
+  const router = useRouter();
+  const profile = useProfileStore((state) => state.profile);
+  const isProvider = profile?.type === 'provider' || profile?.type === 'admin';
   const [services, setServices] = useState<ServiceResponseDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingService, setEditingService] = useState<ServiceResponseDTO | undefined>(undefined);
+
+  useEffect(() => {
+    if (profile && !isProvider) {
+      router.replace('/schedule');
+    }
+  }, [profile, isProvider, router]);
 
   const fetchServices = async () => {
     try {
@@ -26,8 +37,9 @@ export default function ServicesPage() {
   };
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    if (isProvider) fetchServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isProvider]);
 
   const handleCreate = async (data: CreateServiceDTO | UpdateServiceDTO) => {
     return serviceApi.create(data as CreateServiceDTO);
@@ -54,6 +66,7 @@ export default function ServicesPage() {
     }
   };
 
+  if (profile && !isProvider) return null;
   if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando serviços...</div>;
 
   return (

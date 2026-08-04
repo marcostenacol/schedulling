@@ -20,11 +20,16 @@ export default function Sidebar() {
   const { locale, setLocale, t } = useLocale();
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const avatarUrl = getAvatarUrl(profile?.avatar);
+  const isProvider = profile?.type === 'provider' || profile?.type === 'admin';
 
   const navItems = [
     { label: t.nav.schedule, href: '/schedule' },
-    { label: t.nav.services, href: '/services' },
-    { label: t.nav.availability, href: '/availability' },
+    ...(isProvider
+      ? [
+          { label: t.nav.services, href: '/services' },
+          { label: t.nav.availability, href: '/availability' },
+        ]
+      : []),
     { label: t.nav.profile, href: '/profile' },
   ];
 

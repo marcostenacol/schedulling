@@ -9,6 +9,7 @@ import { scheduleApi } from '../api/schedule.api';
 import { ServiceResponseDTO } from '@/modules/service/dtos/service.dto';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useProfileStore } from '@/modules/profile/store/profile.store';
 
 interface CreateScheduleModalProps {
   onClose: () => void;
@@ -18,7 +19,9 @@ interface CreateScheduleModalProps {
 type Mode = 'own' | 'search';
 
 export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClose, onSuccess }) => {
-  const [mode, setMode] = useState<Mode>('own');
+  const profile = useProfileStore((state) => state.profile);
+  const isProvider = profile?.type === 'provider' || profile?.type === 'admin';
+  const [mode, setMode] = useState<Mode>(isProvider ? 'own' : 'search');
   const [ownServices, setOwnServices] = useState<ServiceResponseDTO[]>([]);
   const [providerCode, setProviderCode] = useState('');
   const [searching, setSearching] = useState(false);
@@ -157,26 +160,28 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-1 p-1 bg-app-surface-2 rounded-lg">
-              <button
-                type="button"
-                onClick={() => setMode('own')}
-                className={`flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  mode === 'own' ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
-                }`}
-              >
-                Meu serviço
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('search')}
-                className={`flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  mode === 'search' ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
-                }`}
-              >
-                Agendar com prestador
-              </button>
-            </div>
+            {isProvider && (
+              <div className="flex items-center gap-1 p-1 bg-app-surface-2 rounded-lg">
+                <button
+                  type="button"
+                  onClick={() => setMode('own')}
+                  className={`flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    mode === 'own' ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
+                  }`}
+                >
+                  Meu serviço
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('search')}
+                  className={`flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    mode === 'search' ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
+                  }`}
+                >
+                  Agendar com prestador
+                </button>
+              </div>
+            )}
 
             {mode === 'own' ? (
               <div className="flex flex-col gap-1 w-full">
@@ -203,10 +208,11 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
                   <label className="text-sm font-medium text-app-muted">Código do prestador</label>
                   <div className="flex gap-2">
                     <input
-                      className="flex-1 px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
+                      className="flex-1 px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent uppercase tracking-widest font-mono"
                       value={providerCode}
-                      onChange={e => setProviderCode(e.target.value)}
-                      placeholder="Cole o código/link recebido do prestador"
+                      onChange={e => setProviderCode(e.target.value.toUpperCase())}
+                      placeholder="Ex: 48D23L"
+                      maxLength={6}
                     />
                     <Button type="button" onClick={handleSearchProvider} isLoading={searching}>
                       Buscar
