@@ -238,6 +238,39 @@ body {
   box-shadow: 0 0 0 2px var(--accent);
 }
 
+/* Views Semana/Dia — grade de horários mais leve (meia-hora quase invisível, só a hora cheia
+   marca), coluna do dia atual destacada (fundo sutil + selo circular no cabeçalho, igual ao
+   mês) e indicador de "agora" na cor do app em vez do vermelho padrão da lib. */
+.rbc-time-view .rbc-time-slot {
+  border-top-color: transparent !important;
+}
+
+.rbc-time-view .rbc-timeslot-group {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.rbc-time-header-content,
+.rbc-time-content > * + * > * {
+  border-left-color: var(--border) !important;
+}
+
+.rbc-time-header .rbc-header.rbc-today {
+  background: transparent !important;
+}
+
+.rbc-time-header .rbc-header.rbc-today .rbc-button-link {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-weight: 700;
+}
+
+.rbc-current-time-indicator {
+  background-color: var(--accent) !important;
+  height: 2px !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
