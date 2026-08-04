@@ -46,14 +46,14 @@ export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEven
         <span className="font-bold text-app-ink capitalize">{label}</span>
       </div>
 
-      <div className="flex items-center gap-1 p-1 bg-app-surface-2 rounded-lg self-start sm:self-auto">
+      <div className="flex items-center gap-0.5 p-1 bg-app-surface-2 rounded-lg self-start sm:self-auto">
         {viewOptions.map((v) => (
           <button
             key={v}
             type="button"
             onClick={() => onView(v as View)}
-            className={`px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${
-              view === v ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
+            className={`min-w-[4.5rem] px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              view === v ? 'bg-app-accent text-app-accent-ink shadow-app-card' : 'text-app-muted hover:text-app-ink'
             }`}
           >
             {VIEW_LABELS[v] ?? v}
