@@ -40,12 +40,12 @@ describe('ScheduleCalendar', () => {
   it('renders the calendar with an event built from the given schedule', () => {
     render(<ScheduleCalendar schedules={[schedule]} onSelectEvent={vi.fn()} />);
 
-    expect(screen.getByText('Corte de cabelo - Maria')).toBeInTheDocument();
+    expect(screen.getByText('Corte de cabelo')).toBeInTheDocument();
   });
 
   it('renders an empty calendar without crashing when there are no schedules', () => {
     render(<ScheduleCalendar schedules={[]} onSelectEvent={vi.fn()} />);
 
-    expect(screen.queryByText('Corte de cabelo - Maria')).not.toBeInTheDocument();
+    expect(screen.queryByText('Corte de cabelo')).not.toBeInTheDocument();
   });
 });

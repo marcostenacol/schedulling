@@ -143,6 +143,65 @@ body {
   color: var(--muted);
 }
 
+/* Cabeçalho dos dias da semana (Dom, Seg, ...) — mais discreto e legível que o padrão da lib. */
+.rbc-header {
+  padding: 10px 4px !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-color: var(--border) !important;
+}
+
+/* "Hoje" vira um selo circular no número do dia em vez de pintar a célula inteira — menos
+   blocão, deixa claro que é só uma indicação, não um estado de seleção. */
+.rbc-today {
+  background: transparent !important;
+}
+
+.rbc-month-view .rbc-now .rbc-button-link {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 999px;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.rbc-date-cell {
+  padding: 6px 8px !important;
+}
+
+.rbc-date-cell > .rbc-button-link {
+  cursor: default;
+}
+
+/* Eventos: deixa claro que são clicáveis (cursor, sombra e leve elevação no hover) — sem isso
+   parecem só uma tag de texto colorida, não um item interativo. */
+.rbc-event {
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+.rbc-event:hover,
+.rbc-event:focus {
+  filter: brightness(1.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.rbc-event.rbc-selected {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.rbc-day-slot .rbc-event {
+  border-left: 3px solid rgba(255, 255, 255, 0.6) !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

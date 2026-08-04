@@ -8,8 +8,15 @@ import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt-BR';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { ScheduleResponseDTO } from '../dtos/schedule.dto';
+import { ScheduleResponseDTO, ScheduleStatus } from '../dtos/schedule.dto';
 import { CalendarToolbar } from './CalendarToolbar';
+
+const STATUS_COLOR: Record<ScheduleStatus, string> = {
+  [ScheduleStatus.PENDING]: '#d97706',
+  [ScheduleStatus.CONFIRMED]: '#0f766e',
+  [ScheduleStatus.CANCELLED]: '#94a3b8',
+  [ScheduleStatus.COMPLETED]: '#16a34a',
+};
 
 const locales = {
   'pt-BR': ptBR,
@@ -69,9 +76,21 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
           showMore: (total) => `+ ${total} mais`
         }}
         onSelectEvent={onSelectEvent}
-        components={{ toolbar: CalendarToolbar }}
-        eventPropGetter={() => ({
-          className: 'bg-app-accent text-app-accent-ink rounded-md border-none text-xs px-2 py-1'
+        components={{
+          toolbar: CalendarToolbar,
+          event: ({ event }) => (
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              <span className="font-semibold shrink-0">{format(event.start, 'HH:mm')}</span>
+              <span className="truncate opacity-90">{event.resource.serviceName}</span>
+            </div>
+          ),
+        }}
+        eventPropGetter={(event) => ({
+          className: 'rbc-event-status rounded-md border-none text-xs px-2 py-1 cursor-pointer',
+          style: {
+            backgroundColor: STATUS_COLOR[event.resource.status],
+            color: '#fff',
+          },
         })}
       />
     </div>
