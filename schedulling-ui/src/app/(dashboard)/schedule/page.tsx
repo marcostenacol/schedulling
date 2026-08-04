@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { scheduleApi } from '@/modules/schedule/api/schedule.api';
 import { ScheduleResponseDTO, ScheduleStatus } from '@/modules/schedule/dtos/schedule.dto';
 import { ScheduleCalendar } from '@/modules/schedule/components/ScheduleCalendar';
@@ -72,83 +72,78 @@ export default function SchedulePage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-3">
-          <ScheduleCalendar
-            schedules={schedules}
-            onSelectEvent={(event) => setSelectedSchedule(event.resource)}
-          />
-        </div>
+      <ScheduleCalendar
+        schedules={schedules}
+        onSelectEvent={(event) => setSelectedSchedule(event.resource)}
+      />
 
-        <div className="space-y-6">
-          <div className="bg-app-surface p-6 rounded-2xl border border-app-border shadow-app-card">
-            <h3 className="font-bold text-app-ink mb-4">Detalhes do Agendamento</h3>
-            {selectedSchedule ? (
-              <div className="space-y-4">
-                <div>
-                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Serviço</label>
-                  <p className="text-app-ink font-semibold">{selectedSchedule.serviceName}</p>
-                </div>
-                <div>
-                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Cliente</label>
-                  <p className="text-app-ink">{selectedSchedule.clientName || 'N/A'}</p>
-                </div>
-                <div>
-                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Horário</label>
-                  <p className="text-app-ink">{new Date(selectedSchedule.startDateTime).toLocaleString('pt-BR')}</p>
-                </div>
-                {selectedSchedule.notes && (
-                  <div>
-                    <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Observações</label>
-                    <p className="text-app-ink">{selectedSchedule.notes}</p>
-                  </div>
-                )}
-                <div className="pt-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success-soft text-app-success' :
-                    selectedSchedule.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-                    selectedSchedule.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-app-surface-2 text-app-muted'
-                  }`}>
-                    {STATUS_LABELS[selectedSchedule.status]}
-                  </span>
-                </div>
+      {selectedSchedule && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-app-surface border border-app-border p-6 rounded-xl shadow-app-card space-y-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-app-ink">Detalhes do Agendamento</h2>
+              <button onClick={() => setSelectedSchedule(null)} className="text-app-muted hover:text-app-ink">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-                {!isFinalStatus && (isProvider || isClient) && (
-                  <div className="flex flex-col gap-2 pt-4 border-t border-app-border">
-                    {isProvider && selectedSchedule.status === ScheduleStatus.PENDING && (
-                      <Button onClick={() => handleStatusChange(ScheduleStatus.CONFIRMED)} isLoading={updatingStatus} className="w-full">
-                        Confirmar
-                      </Button>
-                    )}
-                    {isProvider && selectedSchedule.status === ScheduleStatus.CONFIRMED && (
-                      <Button onClick={() => handleStatusChange(ScheduleStatus.COMPLETED)} isLoading={updatingStatus} className="w-full">
-                        Marcar como concluído
-                      </Button>
-                    )}
-                    {(isProvider || isClient) && (
-                      <Button
-                        variant="danger"
-                        onClick={() => handleStatusChange(ScheduleStatus.CANCELLED)}
-                        isLoading={updatingStatus}
-                        className="w-full"
-                      >
-                        Cancelar agendamento
-                      </Button>
-                    )}
-                  </div>
-                )}
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Serviço</label>
+                <p className="text-app-ink font-semibold">{selectedSchedule.serviceName}</p>
               </div>
-            ) : (
-              <p className="text-app-muted text-sm italic">Selecione um evento no calendário para ver os detalhes.</p>
-            )}
-          </div>
+              <div>
+                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Cliente</label>
+                <p className="text-app-ink">{selectedSchedule.clientName || 'N/A'}</p>
+              </div>
+              <div>
+                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Horário</label>
+                <p className="text-app-ink">{new Date(selectedSchedule.startDateTime).toLocaleString('pt-BR')}</p>
+              </div>
+              {selectedSchedule.notes && (
+                <div>
+                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Observações</label>
+                  <p className="text-app-ink">{selectedSchedule.notes}</p>
+                </div>
+              )}
+              <div className="pt-2">
+                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                  selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success-soft text-app-success' :
+                  selectedSchedule.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
+                  selectedSchedule.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-app-surface-2 text-app-muted'
+                }`}>
+                  {STATUS_LABELS[selectedSchedule.status]}
+                </span>
+              </div>
 
-          <div className="bg-app-accent p-6 rounded-2xl text-app-accent-ink shadow-app-card">
-            <h3 className="font-bold mb-2">Resumo da Semana</h3>
-            <p className="text-app-accent-ink text-sm">Você tem {schedules.length} agendamentos esta semana.</p>
+              {!isFinalStatus && (isProvider || isClient) && (
+                <div className="flex flex-col gap-2 pt-4 border-t border-app-border">
+                  {isProvider && selectedSchedule.status === ScheduleStatus.PENDING && (
+                    <Button onClick={() => handleStatusChange(ScheduleStatus.CONFIRMED)} isLoading={updatingStatus} className="w-full">
+                      Confirmar
+                    </Button>
+                  )}
+                  {isProvider && selectedSchedule.status === ScheduleStatus.CONFIRMED && (
+                    <Button onClick={() => handleStatusChange(ScheduleStatus.COMPLETED)} isLoading={updatingStatus} className="w-full">
+                      Marcar como concluído
+                    </Button>
+                  )}
+                  {(isProvider || isClient) && (
+                    <Button
+                      variant="danger"
+                      onClick={() => handleStatusChange(ScheduleStatus.CANCELLED)}
+                      isLoading={updatingStatus}
+                      className="w-full"
+                    >
+                      Cancelar agendamento
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {showCreateModal && (
         <CreateScheduleModal
