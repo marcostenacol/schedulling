@@ -77,6 +77,10 @@ public class UpdateScheduleStatusService
         newStatus,
         input.getRequester().getId());
 
+    if (newStatus == ScheduleStatus.CONFIRMED) {
+      cancelOverlappingPendingSchedules(updated);
+    }
+
     String clientName =
         updated.getGuestName() != null
             ? updated.getGuestName()
@@ -103,5 +107,25 @@ public class UpdateScheduleStatusService
         .price(updated.getPrice())
         .notes(updated.getNotes())
         .build();
+  }
+
+  private void cancelOverlappingPendingSchedules(Schedule confirmed) {
+    List<Schedule> conflicting =
+        repository.findOverlappingPendingSchedulesExcluding(
+            confirmed.getProvider().getId(),
+            confirmed.getStartDateTime(),
+            confirmed.getEndDateTime(),
+            confirmed.getId());
+
+    conflicting.forEach(s -> s.setStatus(ScheduleStatus.CANCELLED));
+    repository.saveAll(conflicting);
+
+    conflicting.forEach(
+        s ->
+            log.info(
+                "Agendamento id={} cancelado automaticamente por conflito com o agendamento "
+                    + "confirmado id={}",
+                s.getId(),
+                confirmed.getId()));
   }
 }

@@ -40,9 +40,23 @@ public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
   Page<Schedule> findByClientIdAndStatusIn(
       UUID clientId, List<ScheduleStatus> statuses, Pageable pageable);
 
+  /**
+   * Só CONFIRMED reserva o horário de fato — PENDING não bloqueia outros clientes de solicitarem o
+   * mesmo horário, evitando que uma solicitação nunca respondida trave a agenda indefinidamente.
+   * Quando uma dessas solicitações concorrentes é confirmada, as demais PENDING que se sobrepõem
+   * são canceladas automaticamente (ver {@link
+   * com.scheduling.modules.schedule.service.UpdateScheduleStatusService}).
+   */
   @Query(
       "SELECT s FROM Schedule s WHERE s.provider.id = :providerId AND "
-          + "s.status != 'CANCELLED' AND "
+          + "s.status = 'CONFIRMED' AND "
           + "((s.startDateTime < :end AND s.endDateTime > :start))")
   List<Schedule> findOverlappingSchedules(UUID providerId, LocalDateTime start, LocalDateTime end);
+
+  @Query(
+      "SELECT s FROM Schedule s WHERE s.provider.id = :providerId AND s.id <> :excludeId AND "
+          + "s.status = 'PENDING' AND "
+          + "((s.startDateTime < :end AND s.endDateTime > :start))")
+  List<Schedule> findOverlappingPendingSchedulesExcluding(
+      UUID providerId, LocalDateTime start, LocalDateTime end, UUID excludeId);
 }
