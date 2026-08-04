@@ -21,11 +21,11 @@ export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEven
         <button
           type="button"
           onClick={() => onNavigate('TODAY')}
-          className="px-3 py-1.5 rounded-md text-sm font-semibold border border-app-border text-app-ink hover:bg-app-surface-2 transition-colors"
+          className="px-3 py-1.5 rounded-full text-sm font-semibold border border-app-border text-app-ink hover:bg-app-surface-2 transition-colors"
         >
           Hoje
         </button>
-        <div className="flex items-center rounded-md border border-app-border overflow-hidden">
+        <div className="flex items-center rounded-full border border-app-border overflow-hidden">
           <button
             type="button"
             onClick={() => onNavigate('PREV')}
@@ -46,13 +46,13 @@ export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEven
         <span className="font-bold text-app-ink capitalize">{label}</span>
       </div>
 
-      <div className="flex items-center gap-0.5 p-1 bg-app-surface-2 rounded-lg self-start sm:self-auto">
+      <div className="flex items-center gap-0.5 p-1 bg-app-surface-2 rounded-full self-start sm:self-auto">
         {viewOptions.map((v) => (
           <button
             key={v}
             type="button"
             onClick={() => onView(v as View)}
-            className={`min-w-[4.5rem] px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            className={`min-w-[4.5rem] px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               view === v ? 'bg-app-accent text-app-accent-ink shadow-app-card' : 'text-app-muted hover:text-app-ink'
             }`}
           >
