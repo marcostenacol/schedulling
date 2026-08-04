@@ -7,7 +7,6 @@ import { serviceApi } from '@/modules/service/api/service.api';
 import { availabilityApi } from '@/modules/availability/api/availability.api';
 import { scheduleApi } from '../api/schedule.api';
 import { ServiceResponseDTO } from '@/modules/service/dtos/service.dto';
-import { useProfileStore } from '@/modules/profile/store/profile.store';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
@@ -16,11 +15,15 @@ interface CreateScheduleModalProps {
   onSuccess: () => void;
 }
 
-export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClose, onSuccess }) => {
-  const profile = useProfileStore((state) => state.profile);
-  const isProvider = profile?.type === 'provider';
+type Mode = 'own' | 'search';
 
-  const [services, setServices] = useState<ServiceResponseDTO[]>([]);
+export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClose, onSuccess }) => {
+  const [mode, setMode] = useState<Mode>('own');
+  const [ownServices, setOwnServices] = useState<ServiceResponseDTO[]>([]);
+  const [providerCode, setProviderCode] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [foundServices, setFoundServices] = useState<ServiceResponseDTO[] | null>(null);
+
   const [serviceId, setServiceId] = useState('');
   const [date, setDate] = useState('');
   const [slots, setSlots] = useState<string[]>([]);
@@ -28,21 +31,30 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
   const [customTime, setCustomTime] = useState('');
   const [guestName, setGuestName] = useState('');
   const [notes, setNotes] = useState('');
+  const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [confirmingOutsideHours, setConfirmingOutsideHours] = useState(false);
 
+  const services = mode === 'own' ? ownServices : (foundServices ?? []);
   const selectedService = services.find(s => s.id === serviceId);
   const chosenTime = selectedSlot ?? (customTime ? `${customTime}:00` : null);
   const isOutsideAvailability = !!chosenTime && !slots.includes(chosenTime);
 
   useEffect(() => {
-    const request = isProvider ? serviceApi.listMe() : serviceApi.listPublic();
-    request
-      .then(res => setServices(res.data.content))
-      .catch(() => setError('Erro ao carregar serviços disponíveis.'));
-  }, [isProvider]);
+    serviceApi.listMe()
+      .then(res => setOwnServices(res.data.content))
+      .catch(() => setOwnServices([]));
+  }, []);
+
+  useEffect(() => {
+    setServiceId('');
+  }, [mode]);
+
+  useEffect(() => {
+    setDurationMinutes(selectedService?.durationMinutes ?? '');
+  }, [selectedService]);
 
   useEffect(() => {
     setSelectedSlot(null);
@@ -61,6 +73,24 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
       .finally(() => setLoadingSlots(false));
   }, [serviceId, date, selectedService]);
 
+  const handleSearchProvider = async () => {
+    if (!providerCode.trim()) return;
+    setSearching(true);
+    setError('');
+    setFoundServices(null);
+    try {
+      const res = await serviceApi.listByProvider(providerCode.trim());
+      if (res.data.content.length === 0) {
+        setError('Nenhum serviço ativo encontrado para este prestador.');
+      }
+      setFoundServices(res.data.content);
+    } catch {
+      setError('Prestador não encontrado. Confira o código.');
+    } finally {
+      setSearching(false);
+    }
+  };
+
   const createSchedule = async () => {
     if (!selectedService || !chosenTime) return;
 
@@ -71,8 +101,11 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
         providerId: selectedService.providerId,
         serviceId: selectedService.id,
         startDateTime: `${date}T${chosenTime}`,
-        ...(isProvider && guestName ? { guestName } : {}),
-        ...(isProvider && notes ? { notes } : {}),
+        ...(mode === 'own' && guestName ? { guestName } : {}),
+        ...(mode === 'own' && notes ? { notes } : {}),
+        ...(mode === 'own' && durationMinutes && durationMinutes !== selectedService.durationMinutes
+          ? { durationMinutes: Number(durationMinutes) }
+          : {}),
       });
       onSuccess();
     } catch (err) {
@@ -124,29 +157,88 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-1 w-full">
-              <label className="text-sm font-medium text-app-muted">Serviço</label>
-              <select
-                className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
-                value={serviceId}
-                onChange={e => setServiceId(e.target.value)}
+            <div className="flex items-center gap-1 p-1 bg-app-surface-2 rounded-lg">
+              <button
+                type="button"
+                onClick={() => setMode('own')}
+                className={`flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  mode === 'own' ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
+                }`}
               >
-                <option value="">Selecione um serviço</option>
-                {services.map(s => (
-                  <option key={s.id} value={s.id}>
-                    {isProvider ? s.name : `${s.name} (${s.providerName})`} — R$ {s.price.toFixed(2)}
-                  </option>
-                ))}
-              </select>
-              {services.length === 0 && (
-                <span className="text-xs text-app-muted">
-                  {isProvider ? 'Você ainda não cadastrou nenhum serviço.' : 'Nenhum serviço disponível no catálogo ainda.'}
-                </span>
-              )}
+                Meu serviço
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('search')}
+                className={`flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  mode === 'search' ? 'bg-app-accent text-app-accent-ink' : 'text-app-muted hover:text-app-ink'
+                }`}
+              >
+                Agendar com prestador
+              </button>
             </div>
 
-            {isProvider && (
+            {mode === 'own' ? (
+              <div className="flex flex-col gap-1 w-full">
+                <label className="text-sm font-medium text-app-muted">Serviço</label>
+                <select
+                  className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
+                  value={serviceId}
+                  onChange={e => setServiceId(e.target.value)}
+                >
+                  <option value="">Selecione um serviço</option>
+                  {ownServices.map(s => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} — R$ {s.price.toFixed(2)}
+                    </option>
+                  ))}
+                </select>
+                {ownServices.length === 0 && (
+                  <span className="text-xs text-app-muted">Você ainda não cadastrou nenhum serviço.</span>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1 w-full">
+                  <label className="text-sm font-medium text-app-muted">Código do prestador</label>
+                  <div className="flex gap-2">
+                    <input
+                      className="flex-1 px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
+                      value={providerCode}
+                      onChange={e => setProviderCode(e.target.value)}
+                      placeholder="Cole o código/link recebido do prestador"
+                    />
+                    <Button type="button" onClick={handleSearchProvider} isLoading={searching}>
+                      Buscar
+                    </Button>
+                  </div>
+                </div>
+
+                {foundServices && foundServices.length > 0 && (
+                  <div className="flex flex-col gap-1 w-full">
+                    <label className="text-sm font-medium text-app-muted">Serviço</label>
+                    <select
+                      className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
+                      value={serviceId}
+                      onChange={e => setServiceId(e.target.value)}
+                    >
+                      <option value="">Selecione um serviço</option>
+                      {foundServices.map(s => (
+                        <option key={s.id} value={s.id}>
+                          {s.name} ({s.providerName}) — R$ {s.price.toFixed(2)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {mode === 'own' && selectedService && (
               <>
+                <div className="p-3 rounded-md bg-app-accent-soft text-app-accent text-xs font-medium">
+                  Agendamento walk-in — cliente sem conta no sistema.
+                </div>
                 <Input
                   label="Nome do cliente (opcional)"
                   value={guestName}
@@ -162,6 +254,13 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
                     placeholder="Alguma observação sobre este atendimento..."
                   />
                 </div>
+                <Input
+                  label={`Duração em minutos (padrão do serviço: ${selectedService.durationMinutes}min)`}
+                  type="number"
+                  min={1}
+                  value={durationMinutes}
+                  onChange={e => setDurationMinutes(e.target.value === '' ? '' : Number(e.target.value))}
+                />
               </>
             )}
 
