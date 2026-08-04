@@ -19,9 +19,10 @@ export const serviceApi = {
     const response = await apiClient.delete<ApiResponse<void>>(`/services/${id}`);
     return response.data;
   },
-  listPublic: async (): Promise<ApiResponse<PageResponse<ServiceResponseDTO>>> => {
+  /** Lista os serviços de UM prestador específico — não existe um catálogo aberto de todos. */
+  listByProvider: async (providerId: string): Promise<ApiResponse<PageResponse<ServiceResponseDTO>>> => {
     const response = await apiClient.get<ApiResponse<PageResponse<ServiceResponseDTO>>>('/services', {
-      params: { size: 100 },
+      params: { providerId, size: 100 },
     });
     return response.data;
   }

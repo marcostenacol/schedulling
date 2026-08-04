@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { Copy, Check } from 'lucide-react';
 import { ProfileResponseDTO } from '../dtos/profile.dto';
 import { getAvatarUrl } from '@/shared/getAvatarUrl';
 
@@ -16,6 +17,14 @@ const TYPE_LABELS: Record<string, string> = {
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => {
   const avatarUrl = getAvatarUrl(profile.avatar);
+  const [copied, setCopied] = useState(false);
+  const isProvider = profile.type === 'provider' || profile.type === 'admin';
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(profile.userId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="bg-app-surface border border-app-border shadow-app-card rounded-lg p-6 flex flex-col items-center">
@@ -38,6 +47,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
       <div className="badge bg-app-accent-soft text-app-accent px-3 py-1 rounded-full text-xs font-semibold mb-6 uppercase">
         {TYPE_LABELS[profile.type] ?? profile.type}
       </div>
+
+      {isProvider && (
+        <div className="w-full mb-6">
+          <h3 className="text-xs font-semibold text-app-muted uppercase mb-2 text-center">
+            Código de prestador (compartilhe com clientes)
+          </h3>
+          <button
+            onClick={handleCopyCode}
+            className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-app-surface-2 border border-app-border rounded-md text-app-ink text-xs font-mono hover:border-app-accent transition-colors"
+          >
+            <span className="truncate">{profile.userId}</span>
+            {copied ? <Check className="w-4 h-4 text-app-success shrink-0" /> : <Copy className="w-4 h-4 text-app-muted shrink-0" />}
+          </button>
+        </div>
+      )}
 
       {profile.bio && (
         <div className="w-full text-center mb-6">

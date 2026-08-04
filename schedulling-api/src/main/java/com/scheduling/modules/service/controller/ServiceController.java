@@ -35,11 +35,17 @@ public class ServiceController extends BaseController {
   private final DeleteServiceService deleteServiceService;
   private final ListPublicServicesService listPublicServicesService;
 
+  /**
+   * Exige {@code providerId} — não existe listagem de "todos os serviços de todos os
+   * prestadores" (evita expor a base inteira pra qualquer usuário autenticado). Quem quer
+   * agendar com um prestador precisa antes ter o código/link dele.
+   */
   @GetMapping
   public ResponseEntity<ApiResponse<Page<ServiceResponseDTO>>> listPublic(
-      @PageableDefault(size = 20) Pageable pageable) {
-    Page<ServiceResponseDTO> response = listPublicServicesService.execute(pageable);
-    return success("Catálogo de serviços recuperado com sucesso", response);
+      @RequestParam UUID providerId, @PageableDefault(size = 20) Pageable pageable) {
+    Page<ServiceResponseDTO> response =
+        listPublicServicesService.execute(new ListPublicServicesService.Input(providerId, pageable));
+    return success("Serviços do prestador recuperados com sucesso", response);
   }
 
   @PostMapping
