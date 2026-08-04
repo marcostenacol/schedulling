@@ -3,6 +3,7 @@ package com.scheduling.modules.schedule.service;
 import com.scheduling.base.service.BaseService;
 import com.scheduling.modules.auth.enums.RoleEnum;
 import com.scheduling.modules.auth.model.User;
+import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.modules.schedule.dto.ScheduleResponseDTO;
 import com.scheduling.modules.schedule.model.Schedule;
 import com.scheduling.modules.schedule.model.ScheduleStatus;
@@ -20,6 +21,7 @@ public class ListSchedulesService
     implements BaseService<ListSchedulesService.Input, Page<ScheduleResponseDTO>> {
 
   private final ScheduleRepository repository;
+  private final ProfileRepository profileRepository;
 
   @Override
   public Page<ScheduleResponseDTO> execute(Input input) {
@@ -35,18 +37,36 @@ public class ListSchedulesService
       schedules = repository.findByClientIdAndStatusIn(user.getId(), statuses, pageable);
     }
 
-    return schedules.map(
-        s ->
-            ScheduleResponseDTO.builder()
-                .id(s.getId())
-                .clientId(s.getClient().getId())
-                .providerId(s.getProvider().getId())
-                .serviceName(s.getService().getName())
-                .startDateTime(s.getStartDateTime())
-                .endDateTime(s.getEndDateTime())
-                .status(s.getStatus())
-                .price(s.getPrice())
-                .build());
+    return schedules.map(this::toResponseDTO);
+  }
+
+  private ScheduleResponseDTO toResponseDTO(Schedule s) {
+    String clientName =
+        s.getGuestName() != null
+            ? s.getGuestName()
+            : profileRepository
+                .findByUserId(s.getClient().getId())
+                .map(p -> p.getName())
+                .orElse(s.getClient().getEmail());
+    String providerName =
+        profileRepository
+            .findByUserId(s.getProvider().getId())
+            .map(p -> p.getName())
+            .orElse(s.getProvider().getEmail());
+
+    return ScheduleResponseDTO.builder()
+        .id(s.getId())
+        .clientId(s.getClient().getId())
+        .clientName(clientName)
+        .providerId(s.getProvider().getId())
+        .providerName(providerName)
+        .serviceName(s.getService().getName())
+        .startDateTime(s.getStartDateTime())
+        .endDateTime(s.getEndDateTime())
+        .status(s.getStatus())
+        .price(s.getPrice())
+        .notes(s.getNotes())
+        .build();
   }
 
   public record Input(User user, Pageable pageable) {}

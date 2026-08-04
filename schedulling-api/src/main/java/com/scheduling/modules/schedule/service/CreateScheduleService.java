@@ -89,6 +89,8 @@ public class CreateScheduleService
             .endDateTime(end)
             .status(ScheduleStatus.PENDING)
             .price(service.getPrice())
+            .guestName(input.getData().getGuestName())
+            .notes(input.getData().getNotes())
             .build();
 
     Schedule saved = scheduleRepository.save(schedule);
@@ -101,10 +103,12 @@ public class CreateScheduleService
         start);
 
     String clientName =
-        profileRepository
-            .findByUserId(saved.getClient().getId())
-            .map(p -> p.getName())
-            .orElse(saved.getClient().getEmail());
+        saved.getGuestName() != null
+            ? saved.getGuestName()
+            : profileRepository
+                .findByUserId(saved.getClient().getId())
+                .map(p -> p.getName())
+                .orElse(saved.getClient().getEmail());
     String providerName =
         profileRepository
             .findByUserId(saved.getProvider().getId())
@@ -122,6 +126,7 @@ public class CreateScheduleService
         .endDateTime(saved.getEndDateTime())
         .status(saved.getStatus())
         .price(saved.getPrice())
+        .notes(saved.getNotes())
         .build();
   }
 }

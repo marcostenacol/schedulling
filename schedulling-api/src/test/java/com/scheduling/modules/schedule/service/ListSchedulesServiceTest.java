@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import com.scheduling.modules.auth.enums.RoleEnum;
 import com.scheduling.modules.auth.model.Role;
 import com.scheduling.modules.auth.model.User;
+import com.scheduling.modules.profile.repository.ProfileRepository;
 import com.scheduling.modules.schedule.dto.ScheduleResponseDTO;
 import com.scheduling.modules.schedule.model.Schedule;
 import com.scheduling.modules.schedule.model.ScheduleStatus;
@@ -25,11 +26,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class ListSchedulesServiceTest {
 
   @Mock private ScheduleRepository repository;
+  @Mock private ProfileRepository profileRepository;
 
   @InjectMocks private ListSchedulesService listSchedulesService;
 
@@ -55,6 +58,7 @@ class ListSchedulesServiceTest {
     Pageable pageable = PageRequest.of(0, 20);
     when(repository.findByProviderIdAndStatusIn(any(), anyList(), any()))
         .thenReturn(new PageImpl<>(Collections.singletonList(schedule)));
+    when(profileRepository.findByUserId(any())).thenReturn(Optional.empty());
 
     Page<ScheduleResponseDTO> response =
         listSchedulesService.execute(new ListSchedulesService.Input(provider, pageable));
@@ -86,6 +90,7 @@ class ListSchedulesServiceTest {
     Pageable pageable = PageRequest.of(0, 20);
     when(repository.findByClientIdAndStatusIn(any(), anyList(), any()))
         .thenReturn(new PageImpl<>(Collections.singletonList(schedule)));
+    when(profileRepository.findByUserId(any())).thenReturn(Optional.empty());
 
     Page<ScheduleResponseDTO> response =
         listSchedulesService.execute(new ListSchedulesService.Input(client, pageable));

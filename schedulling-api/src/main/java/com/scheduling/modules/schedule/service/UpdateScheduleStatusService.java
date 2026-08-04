@@ -74,10 +74,12 @@ public class UpdateScheduleStatusService
         input.getRequester().getId());
 
     String clientName =
-        profileRepository
-            .findByUserId(updated.getClient().getId())
-            .map(p -> p.getName())
-            .orElse(updated.getClient().getEmail());
+        updated.getGuestName() != null
+            ? updated.getGuestName()
+            : profileRepository
+                .findByUserId(updated.getClient().getId())
+                .map(p -> p.getName())
+                .orElse(updated.getClient().getEmail());
     String providerName =
         profileRepository
             .findByUserId(updated.getProvider().getId())
@@ -95,6 +97,7 @@ public class UpdateScheduleStatusService
         .endDateTime(updated.getEndDateTime())
         .status(updated.getStatus())
         .price(updated.getPrice())
+        .notes(updated.getNotes())
         .build();
   }
 }

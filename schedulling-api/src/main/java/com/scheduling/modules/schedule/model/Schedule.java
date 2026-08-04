@@ -50,6 +50,16 @@ public class Schedule {
   @Column(nullable = false)
   private BigDecimal price;
 
+  /**
+   * Preenchido quando o prestador cria o agendamento em nome de um cliente sem conta no sistema
+   * (walk-in) — sobrepõe o nome do perfil do cliente na exibição quando presente.
+   */
+  @Column(name = "guest_name")
+  private String guestName;
+
+  @Column(columnDefinition = "TEXT")
+  private String notes;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

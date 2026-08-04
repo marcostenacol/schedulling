@@ -7,6 +7,7 @@ import { serviceApi } from '@/modules/service/api/service.api';
 import { availabilityApi } from '@/modules/availability/api/availability.api';
 import { scheduleApi } from '../api/schedule.api';
 import { ServiceResponseDTO } from '@/modules/service/dtos/service.dto';
+import { useProfileStore } from '@/modules/profile/store/profile.store';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
@@ -16,12 +17,17 @@ interface CreateScheduleModalProps {
 }
 
 export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClose, onSuccess }) => {
+  const profile = useProfileStore((state) => state.profile);
+  const isProvider = profile?.type === 'provider';
+
   const [services, setServices] = useState<ServiceResponseDTO[]>([]);
   const [serviceId, setServiceId] = useState('');
   const [date, setDate] = useState('');
   const [slots, setSlots] = useState<string[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [customTime, setCustomTime] = useState('');
+  const [guestName, setGuestName] = useState('');
+  const [notes, setNotes] = useState('');
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -32,10 +38,11 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
   const isOutsideAvailability = !!chosenTime && !slots.includes(chosenTime);
 
   useEffect(() => {
-    serviceApi.listPublic()
+    const request = isProvider ? serviceApi.listMe() : serviceApi.listPublic();
+    request
       .then(res => setServices(res.data.content))
       .catch(() => setError('Erro ao carregar serviços disponíveis.'));
-  }, []);
+  }, [isProvider]);
 
   useEffect(() => {
     setSelectedSlot(null);
@@ -64,6 +71,8 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
         providerId: selectedService.providerId,
         serviceId: selectedService.id,
         startDateTime: `${date}T${chosenTime}`,
+        ...(isProvider && guestName ? { guestName } : {}),
+        ...(isProvider && notes ? { notes } : {}),
       });
       onSuccess();
     } catch (err) {
@@ -125,14 +134,36 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
                 <option value="">Selecione um serviço</option>
                 {services.map(s => (
                   <option key={s.id} value={s.id}>
-                    {s.name} ({s.providerName}) — R$ {s.price.toFixed(2)}
+                    {isProvider ? s.name : `${s.name} (${s.providerName})`} — R$ {s.price.toFixed(2)}
                   </option>
                 ))}
               </select>
               {services.length === 0 && (
-                <span className="text-xs text-app-muted">Nenhum serviço disponível no catálogo ainda.</span>
+                <span className="text-xs text-app-muted">
+                  {isProvider ? 'Você ainda não cadastrou nenhum serviço.' : 'Nenhum serviço disponível no catálogo ainda.'}
+                </span>
               )}
             </div>
+
+            {isProvider && (
+              <>
+                <Input
+                  label="Nome do cliente (opcional)"
+                  value={guestName}
+                  onChange={e => setGuestName(e.target.value)}
+                  placeholder="Ex: João da Silva"
+                />
+                <div className="flex flex-col gap-1 w-full">
+                  <label className="text-sm font-medium text-app-muted">Descrição / observações (opcional)</label>
+                  <textarea
+                    className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent h-20"
+                    value={notes}
+                    onChange={e => setNotes(e.target.value)}
+                    placeholder="Alguma observação sobre este atendimento..."
+                  />
+                </div>
+              </>
+            )}
 
             <Input label="Data" type="date" value={date} onChange={e => setDate(e.target.value)} />
 

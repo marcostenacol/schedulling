@@ -24,4 +24,5 @@ public class ScheduleResponseDTO {
   private LocalDateTime endDateTime;
   private ScheduleStatus status;
   private BigDecimal price;
+  private String notes;
 }

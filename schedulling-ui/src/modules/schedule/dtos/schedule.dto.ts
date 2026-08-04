@@ -16,10 +16,13 @@ export interface ScheduleResponseDTO {
   endDateTime: string;
   status: ScheduleStatus;
   price: number;
+  notes?: string;
 }
 
 export interface CreateScheduleDTO {
   providerId: string;
   serviceId: string;
   startDateTime: string;
+  guestName?: string;
+  notes?: string;
 }
