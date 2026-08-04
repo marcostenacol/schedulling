@@ -51,7 +51,8 @@ public class GetAvailableSlotsService
     int duration = service.getDurationMinutes();
 
     for (Availability avail : availabilities) {
-      boolean isRecurringMatch = avail.getSpecificDate() == null && avail.getDayOfWeek() == adjustedDay;
+      boolean isRecurringMatch =
+          avail.getSpecificDate() == null && avail.getDayOfWeek() == adjustedDay;
       boolean isSpecificMatch = input.getDate().equals(avail.getSpecificDate());
 
       if (isRecurringMatch || isSpecificMatch) {
@@ -79,7 +80,8 @@ public class GetAvailableSlotsService
     return !blocks.isEmpty();
   }
 
-  private boolean isAlreadyScheduled(java.util.UUID providerId, LocalDateTime start, LocalDateTime end) {
+  private boolean isAlreadyScheduled(
+      java.util.UUID providerId, LocalDateTime start, LocalDateTime end) {
     return !scheduleRepository.findOverlappingSchedules(providerId, start, end).isEmpty();
   }
 }

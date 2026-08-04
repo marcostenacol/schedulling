@@ -18,7 +18,9 @@ public class CreateScheduleDTO {
   @NotNull(message = "A data e hora de início são obrigatórias")
   private LocalDateTime startDateTime;
 
-  /** Nome do cliente sem conta (ex.: prestador agendando um walk-in) — sobrepõe o nome do perfil. */
+  /**
+   * Nome do cliente sem conta (ex.: prestador agendando um walk-in) — sobrepõe o nome do perfil.
+   */
   private String guestName;
 
   private String notes;

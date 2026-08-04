@@ -26,7 +26,8 @@ public class UpdateScheduleStatusService
     implements BaseService<UpdateScheduleStatusService.Input, ScheduleResponseDTO> {
 
   /** Cliente só pode cancelar a própria reserva — confirmar/concluir é ação do prestador. */
-  private static final List<ScheduleStatus> CLIENT_ALLOWED_STATUSES = List.of(ScheduleStatus.CANCELLED);
+  private static final List<ScheduleStatus> CLIENT_ALLOWED_STATUSES =
+      List.of(ScheduleStatus.CANCELLED);
 
   private final ScheduleRepository repository;
   private final ProfileRepository profileRepository;
@@ -45,7 +46,8 @@ public class UpdateScheduleStatusService
     Schedule schedule =
         repository
             .findByIdWithRelations(input.getScheduleId())
-            .orElseThrow(() -> new AppException("Agendamento não encontrado", HttpStatus.NOT_FOUND));
+            .orElseThrow(
+                () -> new AppException("Agendamento não encontrado", HttpStatus.NOT_FOUND));
 
     boolean isProvider = schedule.getProvider().getId().equals(input.getRequester().getId());
     boolean isClient = schedule.getClient().getId().equals(input.getRequester().getId());

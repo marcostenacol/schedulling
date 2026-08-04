@@ -80,7 +80,8 @@ class GetAvailableSlotsServiceTest {
   }
 
   @Test
-  @DisplayName("Não deve duplicar slot quando disponibilidade recorrente e avulsa cobrem a mesma data")
+  @DisplayName(
+      "Não deve duplicar slot quando disponibilidade recorrente e avulsa cobrem a mesma data")
   void shouldNotDuplicateSlotsWhenRecurringAndSpecificOverlap() {
     LocalDate date = LocalDate.of(2024, 5, 20); // Segunda-feira (1 no model)
     Availability recurring =

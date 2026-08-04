@@ -39,8 +39,8 @@ public class Availability {
   private boolean active = true;
 
   /**
-   * Quando preenchido, esta disponibilidade vale só nesta data específica (avulsa), não toda
-   * semana — {@code dayOfWeek} continua preenchido (derivado da data) só pra exibição/consulta.
+   * Quando preenchido, esta disponibilidade vale só nesta data específica (avulsa), não toda semana
+   * — {@code dayOfWeek} continua preenchido (derivado da data) só pra exibição/consulta.
    */
   @Column private LocalDate specificDate;
 }

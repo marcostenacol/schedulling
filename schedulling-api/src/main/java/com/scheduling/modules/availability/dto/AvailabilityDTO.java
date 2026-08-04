@@ -11,8 +11,8 @@ import lombok.Data;
 public class AvailabilityDTO {
 
   /**
-   * Obrigatório quando {@code specificDate} não é informado (disponibilidade recorrente
-   * semanal). Ignorado (recalculado a partir de {@code specificDate}) quando esta é avulsa.
+   * Obrigatório quando {@code specificDate} não é informado (disponibilidade recorrente semanal).
+   * Ignorado (recalculado a partir de {@code specificDate}) quando esta é avulsa.
    */
   @Min(0)
   @Max(6)
