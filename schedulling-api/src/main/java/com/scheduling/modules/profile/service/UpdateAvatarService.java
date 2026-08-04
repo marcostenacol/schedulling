@@ -54,6 +54,7 @@ public class UpdateAvatarService implements BaseService<UpdateAvatarRequest, Pro
 
     return ProfileResponseDTO.builder()
         .id(profile.getId())
+        .userId(profile.getUser().getId())
         .name(profile.getName())
         .email(profile.getUser().getEmail())
         .avatar(profile.getAvatar())

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProfileResponseDTO {
   private UUID id;
+  private UUID userId;
   private String name;
   private String email;
   private String avatar;

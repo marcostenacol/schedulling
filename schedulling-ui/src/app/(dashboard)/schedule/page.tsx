@@ -53,8 +53,8 @@ export default function SchedulePage() {
     }
   };
 
-  const isProvider = !!profile && selectedSchedule?.providerId === profile.id;
-  const isClient = !!profile && selectedSchedule?.clientId === profile.id;
+  const isProvider = !!profile && selectedSchedule?.providerId === profile.userId;
+  const isClient = !!profile && selectedSchedule?.clientId === profile.userId;
   const isFinalStatus = selectedSchedule?.status === ScheduleStatus.CANCELLED || selectedSchedule?.status === ScheduleStatus.COMPLETED;
 
   if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando agenda...</div>;
@@ -97,6 +97,12 @@ export default function SchedulePage() {
                   <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Horário</label>
                   <p className="text-app-ink">{new Date(selectedSchedule.startDateTime).toLocaleString('pt-BR')}</p>
                 </div>
+                {selectedSchedule.notes && (
+                  <div>
+                    <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Observações</label>
+                    <p className="text-app-ink">{selectedSchedule.notes}</p>
+                  </div>
+                )}
                 <div className="pt-2">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                     selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success-soft text-app-success' :
