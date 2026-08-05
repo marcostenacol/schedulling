@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { LocaleProvider } from "@/i18n/LocaleContext";
 
@@ -12,6 +13,20 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+
+// Identidade "Caderno de horarios": Fraunces (serifa de eixo optico levemente excentrico) nos
+// titulos/datas, Inter no corpo e nos dados da agenda.
+const frauncesDisplay = Fraunces({
+  subsets: ["latin"],
+  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--font-display",
+  display: "swap",
+});
+const interBody = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +60,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${frauncesDisplay.variable} ${interBody.variable} antialiased`}
       >
         <LocaleProvider>{children}</LocaleProvider>
       </body>

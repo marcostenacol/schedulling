@@ -61,8 +61,10 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
-              className={`whitespace-nowrap shrink-0 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
-                isActive ? 'bg-app-accent-soft text-app-accent' : 'text-app-muted hover:bg-app-surface-2'
+              className={`whitespace-nowrap shrink-0 rounded-lg py-2 text-sm font-semibold transition-colors ${
+                isActive
+                  ? 'nb-ribbon bg-app-accent-soft text-app-accent pl-5 pr-3'
+                  : 'text-app-muted hover:bg-app-surface-2 px-3'
               }`}
             >
               {item.label}

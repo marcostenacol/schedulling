@@ -3,79 +3,96 @@
 @tailwind utilities;
 
 :root {
-  --bg: #eef0f1;
-  --surface: #ffffff;
-  --surface-2: #f7f8f8;
-  --ink: #14181a;
-  --muted: #667077;
-  --border: rgba(20, 24, 26, 0.06);
-  --accent: #0f5c5c;
-  --accent-ink: #ffffff;
-  --accent-soft: #e4efee;
-  --success: #1a7a4c;
-  --success-soft: #e3f0e9;
-  --danger: #b3402e;
-  --shadow: 0 1px 2px rgba(16, 24, 26, 0.04), 0 8px 24px -8px rgba(16, 24, 26, 0.1);
+  --bg: #E8E0CF;
+  --surface: #FCF8EE;
+  --surface-2: #F2EBDA;
+  --ink: #262220;
+  --muted: #7A6F62;
+  --border: rgba(38, 34, 32, 0.13);
+  --accent: #B0263B;
+  --accent-ink: #FFF8F2;
+  --accent-soft: #F4DEDC;
+  --success: #4E6B3A;
+  --success-soft: #E4EBD7;
+  --danger: #A3341F;
+  --rule: rgba(38, 34, 32, 0.08);
+  --margin-rule: rgba(176, 38, 59, 0.32);
+  --shadow: 0 1px 2px rgba(74, 60, 40, 0.06), 0 10px 26px -10px rgba(74, 60, 40, 0.22);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c0e0f;
-    --surface: #191d1f;
-    --surface-2: #212528;
-    --ink: #eef1f2;
-    --muted: #8b969b;
-    --border: rgba(255, 255, 255, 0.06);
-    --accent: #4fb3ac;
-    --accent-ink: #0a1615;
-    --accent-soft: #1c3231;
-    --success: #4ade80;
-    --success-soft: #1d3226;
-    --danger: #f28b74;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -10px rgba(0, 0, 0, 0.55);
+    --bg: #17140F;
+    --surface: #211C16;
+    --surface-2: #2A241C;
+    --ink: #F0E7D6;
+    --muted: #A0917C;
+    --border: rgba(240, 231, 214, 0.11);
+    --accent: #DD5C68;
+    --accent-ink: #26100F;
+    --accent-soft: #3A2126;
+    --success: #9DBE7C;
+    --success-soft: #2B3423;
+    --danger: #E58A6B;
+    --rule: rgba(240, 231, 214, 0.07);
+  --margin-rule: rgba(221, 92, 104, 0.3);
+    --margin-rule: rgba(221, 92, 104, 0.3);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 14px 34px -12px rgba(0, 0, 0, 0.6);
   }
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #eef0f1;
-  --surface: #ffffff;
-  --surface-2: #f7f8f8;
-  --ink: #14181a;
-  --muted: #667077;
-  --border: rgba(20, 24, 26, 0.06);
-  --accent: #0f5c5c;
-  --accent-ink: #ffffff;
-  --accent-soft: #e4efee;
-  --success: #1a7a4c;
-  --success-soft: #e3f0e9;
-  --danger: #b3402e;
-  --shadow: 0 1px 2px rgba(16, 24, 26, 0.04), 0 8px 24px -8px rgba(16, 24, 26, 0.1);
+  --bg: #E8E0CF;
+  --surface: #FCF8EE;
+  --surface-2: #F2EBDA;
+  --ink: #262220;
+  --muted: #7A6F62;
+  --border: rgba(38, 34, 32, 0.13);
+  --accent: #B0263B;
+  --accent-ink: #FFF8F2;
+  --accent-soft: #F4DEDC;
+  --success: #4E6B3A;
+  --success-soft: #E4EBD7;
+  --danger: #A3341F;
+  --rule: rgba(38, 34, 32, 0.08);
+  --margin-rule: rgba(176, 38, 59, 0.32);
+  --shadow: 0 1px 2px rgba(74, 60, 40, 0.06), 0 10px 26px -10px rgba(74, 60, 40, 0.22);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0c0e0f;
-  --surface: #191d1f;
-  --surface-2: #212528;
-  --ink: #eef1f2;
-  --muted: #8b969b;
-  --border: rgba(255, 255, 255, 0.06);
-  --accent: #4fb3ac;
-  --accent-ink: #0a1615;
-  --accent-soft: #1c3231;
-  --success: #4ade80;
-  --success-soft: #1d3226;
-  --danger: #f28b74;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -10px rgba(0, 0, 0, 0.55);
+  --bg: #17140F;
+  --surface: #211C16;
+  --surface-2: #2A241C;
+  --ink: #F0E7D6;
+  --muted: #A0917C;
+  --border: rgba(240, 231, 214, 0.11);
+  --accent: #DD5C68;
+  --accent-ink: #26100F;
+  --accent-soft: #3A2126;
+  --success: #9DBE7C;
+  --success-soft: #2B3423;
+  --danger: #E58A6B;
+  --rule: rgba(240, 231, 214, 0.07);
+  --margin-rule: rgba(221, 92, 104, 0.3);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 14px 34px -12px rgba(0, 0, 0, 0.6);
 }
 
 body {
   color: var(--ink);
   background: var(--bg);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Helvetica Neue", sans-serif;
+}
+
+/* Tipografia "Caderno de horários": serifa Fraunces com eixo optico levemente excentrico
+   nos titulos/datas (ar de caderno de planejamento escrito a mao), Inter no corpo/dados. */
+h1,
+h2,
+.nb-display {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.01em;
 }
 
 /* react-big-calendar tem CSS interno fixo em cores claras (grid, cabeçalho, toolbar) que os
@@ -269,6 +286,153 @@ body {
 .rbc-current-time-indicator {
   background-color: var(--accent) !important;
   height: 2px !important;
+}
+
+/* Realce do slot vazio sob o cursor. A classe `.rbc-selectable` nao existe nesta versao da
+   lib (verificado no bundle publicado: 0 ocorrencias), entao o escopo vem de `.nb-selectable`,
+   posto pelo proprio ScheduleCalendar quando `onSelectSlot` esta ligado. Na visao Semana a
+   `.rbc-events-container` cobre a coluna e engolia o :hover das faixas de horario — ela volta a
+   ser transparente a ponteiro, com os eventos reativados individualmente pra nao perder o clique. */
+.nb-selectable .rbc-day-slot .rbc-events-container {
+  pointer-events: none;
+}
+
+.nb-selectable .rbc-day-slot .rbc-event {
+  pointer-events: auto;
+}
+
+/* Mesma correcao na visao Mes: a `.rbc-row-content` (numeros dos dias/eventos) cobre a
+   `.rbc-row-bg`, entao ela volta a ser transparente a ponteiro e so os filhos interativos
+   (evento, numero do dia, "+N mais") seguem clicaveis. */
+.nb-selectable .rbc-month-view .rbc-row-content {
+  pointer-events: none;
+}
+
+.nb-selectable .rbc-month-view .rbc-row-content .rbc-event,
+.nb-selectable .rbc-month-view .rbc-row-content .rbc-button-link,
+.nb-selectable .rbc-month-view .rbc-row-content .rbc-show-more {
+  pointer-events: auto;
+}
+
+.nb-selectable .rbc-day-slot .rbc-time-slot:hover,
+.nb-selectable .rbc-day-bg:not(.rbc-off-range-bg):hover {
+  background-color: var(--accent-soft);
+  cursor: pointer;
+}
+
+/* =========================================================================
+   Dispositivos de identidade "Caderno de horarios"
+   ========================================================================= */
+
+/* 1. Fita marcadora (ribbon bookmark): faixa vertical carmim presa na borda do item de
+   navegacao ativo, com a ponta recortada em V via clip-path — mesma logica visual de uma
+   fita de cetim saindo da pagina, sem depender de imagem. */
+.nb-ribbon {
+  position: relative;
+}
+
+.nb-ribbon::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 7px;
+  height: calc(100% + 9px);
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+  border-radius: 2px 2px 0 0;
+}
+
+/* 2. Papel pautado: linhas horizontais discretas + filete de margem carmim a esquerda,
+   aplicado so nas superficies de lista/agenda pra nao virar textura no app inteiro. */
+.nb-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    var(--rule) 27px,
+    var(--rule) 28px
+  );
+  background-position: 0 0;
+}
+
+/* 3. Orelha de pagina (dog-ear): dobra triangular no canto superior direito do cartao
+   principal, feita com dois gradientes — sombra da dobra + o verso do papel. */
+.nb-dogear {
+  position: relative;
+}
+
+.nb-dogear::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(
+    225deg,
+    var(--bg) 0 50%,
+    var(--border) 50% calc(50% + 1px),
+    var(--surface-2) calc(50% + 1px) 100%
+  );
+  border-top-right-radius: 1rem;
+  pointer-events: none;
+}
+
+/* 4. Selo de carimbo (stamp) pros status: contorno duplo, versalete espacado e uma leve
+   rotacao, no lugar da pill colorida generica — le como carimbo de borracha na pagina. */
+.nb-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  transform: rotate(-1.4deg);
+  opacity: 0.92;
+}
+
+/* Papel pautado na aba Agenda: as pautas cobrem toda a area da view (nao so as linhas com
+   dado, senao a textura desaparece numa agenda vazia) e um filete de margem carmim a esquerda
+   fecha a leitura de folha de caderno. */
+.rbc-agenda-view {
+  background-image: linear-gradient(
+      to right,
+      transparent 0 27px,
+      var(--margin-rule) 27px 28px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 43px,
+      var(--rule) 43px,
+      var(--rule) 44px
+    );
+  background-position: 0 0, 0 42px;
+  padding-left: 44px;
+}
+
+/* "Hoje" no cabecalho da semana/dia ganha a mesma fita marcadora do menu ativo. */
+.rbc-time-header .rbc-header.rbc-today {
+  position: relative;
+}
+
+/* Fica na borda esquerda da coluna, nao atras do selo do dia — senao a ponta da fita
+   aparece como um coto saindo de cima da pilula. */
+.rbc-time-header .rbc-header.rbc-today::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: -1px;
+  width: 8px;
+  height: 17px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 68%, 0 100%);
 }
 
 @layer utilities {

@@ -21,6 +21,7 @@ export default function SchedulePage() {
   const [loading, setLoading] = useState(true);
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleResponseDTO | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [slotSelection, setSlotSelection] = useState<{ date: string; time: string } | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const profile = useProfileStore((state) => state.profile);
 
@@ -75,6 +76,13 @@ export default function SchedulePage() {
       <ScheduleCalendar
         schedules={schedules}
         onSelectEvent={(event) => setSelectedSchedule(event.resource)}
+        onSelectSlot={(slot) => {
+          const pad = (n: number) => String(n).padStart(2, '0');
+          const date = `${slot.start.getFullYear()}-${pad(slot.start.getMonth() + 1)}-${pad(slot.start.getDate())}`;
+          const time = `${pad(slot.start.getHours())}:${pad(slot.start.getMinutes())}`;
+          setSlotSelection({ date, time });
+          setShowCreateModal(true);
+        }}
       />
 
       {selectedSchedule && (
@@ -107,10 +115,10 @@ export default function SchedulePage() {
                 </div>
               )}
               <div className="pt-2">
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  selectedSchedule.status === 'CONFIRMED' ? 'bg-app-success-soft text-app-success' :
-                  selectedSchedule.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-                  selectedSchedule.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-app-surface-2 text-app-muted'
+                <span className={`nb-stamp ${
+                  selectedSchedule.status === 'CONFIRMED' ? 'bg-app-accent-soft text-app-accent' :
+                  selectedSchedule.status === 'PENDING' ? 'bg-app-surface-2 text-app-muted' :
+                  selectedSchedule.status === 'CANCELLED' ? 'bg-app-surface-2 text-app-danger' : 'bg-app-success-soft text-app-success'
                 }`}>
                   {STATUS_LABELS[selectedSchedule.status]}
                 </span>
@@ -147,8 +155,10 @@ export default function SchedulePage() {
 
       {showCreateModal && (
         <CreateScheduleModal
-          onClose={() => setShowCreateModal(false)}
-          onSuccess={() => { setShowCreateModal(false); fetchSchedules(); }}
+          initialDate={slotSelection?.date}
+          initialTime={slotSelection?.time}
+          onClose={() => { setShowCreateModal(false); setSlotSelection(null); }}
+          onSuccess={() => { setShowCreateModal(false); setSlotSelection(null); fetchSchedules(); }}
         />
       )}
     </div>

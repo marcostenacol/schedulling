@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 import { X, AlertTriangle } from 'lucide-react';
 import { serviceApi } from '@/modules/service/api/service.api';
@@ -14,11 +14,13 @@ import { useProfileStore } from '@/modules/profile/store/profile.store';
 interface CreateScheduleModalProps {
   onClose: () => void;
   onSuccess: () => void;
+  initialDate?: string;
+  initialTime?: string;
 }
 
 type Mode = 'own' | 'search';
 
-export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClose, onSuccess }) => {
+export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClose, onSuccess, initialDate, initialTime }) => {
   const profile = useProfileStore((state) => state.profile);
   const isProvider = profile?.type === 'provider' || profile?.type === 'admin';
   const [mode, setMode] = useState<Mode>(isProvider ? 'own' : 'search');
@@ -28,10 +30,10 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
   const [foundServices, setFoundServices] = useState<ServiceResponseDTO[] | null>(null);
 
   const [serviceId, setServiceId] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(initialDate ?? '');
   const [slots, setSlots] = useState<string[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [customTime, setCustomTime] = useState('');
+  const [customTime, setCustomTime] = useState(initialTime ?? '');
   const [guestName, setGuestName] = useState('');
   const [notes, setNotes] = useState('');
   const [durationMinutes, setDurationMinutes] = useState<number | ''>('');
@@ -59,9 +61,15 @@ export const CreateScheduleModal: React.FC<CreateScheduleModalProps> = ({ onClos
     setDurationMinutes(selectedService?.durationMinutes ?? '');
   }, [selectedService]);
 
+  const skipNextSlotReset = useRef(!!initialTime);
+
   useEffect(() => {
-    setSelectedSlot(null);
-    setCustomTime('');
+    if (skipNextSlotReset.current) {
+      skipNextSlotReset.current = false;
+    } else {
+      setSelectedSlot(null);
+      setCustomTime('');
+    }
     setConfirmingOutsideHours(false);
     if (!serviceId || !date || !selectedService) {
       setSlots([]);
