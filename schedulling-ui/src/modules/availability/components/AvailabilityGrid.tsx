@@ -85,7 +85,7 @@ export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabiliti
                 <button
                   onClick={() => onDeleteSlot(slot.id)}
                   className="p-1 rounded-full hover:bg-app-success/20 transition-colors"
-                  title="Remover horário"
+                  title={t.availability.removeSlot}
                 >
                   <X className="w-3 h-3" />
                 </button>

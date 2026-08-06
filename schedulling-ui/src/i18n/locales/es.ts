@@ -27,7 +27,7 @@ export const es: Dictionary = {
     dateFnsLocale: 'es',
   },
   auth: {
-    loginTitle: 'Bienvenido de nuevo',
+    loginTitle: 'Bienvenido',
     registerTitle: 'Crear una cuenta nueva',
     emailLabel: 'Correo electrónico',
     passwordLabel: 'Contraseña',

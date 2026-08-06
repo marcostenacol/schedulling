@@ -192,7 +192,7 @@ export const pt: Dictionary = {
     dateFnsLocale: 'pt-BR',
   },
   auth: {
-    loginTitle: 'Bem-vindo de volta',
+    loginTitle: 'Bem-vindo',
     registerTitle: 'Criar nova conta',
     emailLabel: 'E-mail',
     passwordLabel: 'Senha',
