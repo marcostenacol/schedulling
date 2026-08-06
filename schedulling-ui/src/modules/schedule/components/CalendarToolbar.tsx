@@ -3,16 +3,17 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { ToolbarProps, View } from 'react-big-calendar';
-
-const VIEW_LABELS: Record<string, string> = {
-  month: 'Mês',
-  week: 'Semana',
-  day: 'Dia',
-  agenda: 'Agenda',
-};
+import { useLocale } from '@/i18n/LocaleContext';
 
 export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEvent>) {
+  const { t } = useLocale();
   const { label, view, views, onNavigate, onView } = props;
+  const viewLabels: Record<string, string> = {
+    month: t.calendar.month,
+    week: t.calendar.week,
+    day: t.calendar.day,
+    agenda: t.calendar.agenda,
+  };
   const viewOptions = Array.isArray(views) ? views : Object.keys(views);
 
   return (
@@ -23,14 +24,14 @@ export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEven
           onClick={() => onNavigate('TODAY')}
           className="px-3 py-1.5 rounded-full text-sm font-semibold border border-app-border text-app-ink hover:bg-app-surface-2 transition-colors"
         >
-          Hoje
+          {t.calendar.today}
         </button>
         <div className="flex items-center rounded-full border border-app-border overflow-hidden">
           <button
             type="button"
             onClick={() => onNavigate('PREV')}
             className="p-1.5 text-app-muted hover:bg-app-surface-2 hover:text-app-ink transition-colors"
-            aria-label="Anterior"
+            aria-label={t.calendar.previous}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -38,7 +39,7 @@ export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEven
             type="button"
             onClick={() => onNavigate('NEXT')}
             className="p-1.5 text-app-muted hover:bg-app-surface-2 hover:text-app-ink transition-colors border-l border-app-border"
-            aria-label="Próximo"
+            aria-label={t.calendar.next}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -56,7 +57,7 @@ export function CalendarToolbar<TEvent extends object>(props: ToolbarProps<TEven
               view === v ? 'bg-app-accent text-app-accent-ink shadow-app-card' : 'text-app-muted hover:text-app-ink'
             }`}
           >
-            {VIEW_LABELS[v] ?? v}
+            {viewLabels[v] ?? v}
           </button>
         ))}
       </div>

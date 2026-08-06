@@ -8,15 +8,16 @@ import { ScheduleCalendar } from '@/modules/schedule/components/ScheduleCalendar
 import { CreateScheduleModal } from '@/modules/schedule/components/CreateScheduleModal';
 import { Button } from '@/components/ui/Button';
 import { useProfileStore } from '@/modules/profile/store/profile.store';
-
-const STATUS_LABELS: Record<ScheduleStatus, string> = {
-  [ScheduleStatus.PENDING]: 'Pendente',
-  [ScheduleStatus.CONFIRMED]: 'Confirmado',
-  [ScheduleStatus.CANCELLED]: 'Cancelado',
-  [ScheduleStatus.COMPLETED]: 'Concluído',
-};
+import { useLocale } from '@/i18n/LocaleContext';
 
 export default function SchedulePage() {
+  const { t } = useLocale();
+  const STATUS_LABELS: Record<ScheduleStatus, string> = {
+    [ScheduleStatus.PENDING]: t.schedule.statusPending,
+    [ScheduleStatus.CONFIRMED]: t.schedule.statusConfirmed,
+    [ScheduleStatus.CANCELLED]: t.schedule.statusCancelled,
+    [ScheduleStatus.COMPLETED]: t.schedule.statusCompleted,
+  };
   const [schedules, setSchedules] = useState<ScheduleResponseDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleResponseDTO | null>(null);
@@ -58,18 +59,18 @@ export default function SchedulePage() {
   const isClient = !!profile && selectedSchedule?.clientId === profile.userId;
   const isFinalStatus = selectedSchedule?.status === ScheduleStatus.CANCELLED || selectedSchedule?.status === ScheduleStatus.COMPLETED;
 
-  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando agenda...</div>;
+  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">{t.schedule.loading}</div>;
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Minha Agenda</h1>
-          <p className="text-app-muted mt-1">Visualize e gerencie seus próximos compromissos.</p>
+          <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">{t.schedule.pageTitle}</h1>
+          <p className="text-app-muted mt-1">{t.schedule.pageSubtitle}</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)} className="flex items-center gap-2 shrink-0">
           <Plus className="h-5 w-5" />
-          Novo Agendamento
+          {t.schedule.newSchedule}
         </Button>
       </div>
 
@@ -89,7 +90,7 @@ export default function SchedulePage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-app-surface border border-app-border p-6 rounded-xl shadow-app-card space-y-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-app-ink">Detalhes do Agendamento</h2>
+              <h2 className="text-xl font-bold text-app-ink">{t.schedule.detailsTitle}</h2>
               <button onClick={() => setSelectedSchedule(null)} className="text-app-muted hover:text-app-ink">
                 <X className="w-5 h-5" />
               </button>
@@ -97,20 +98,20 @@ export default function SchedulePage() {
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Serviço</label>
+                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">{t.common.serviceLabel}</label>
                 <p className="text-app-ink font-semibold">{selectedSchedule.serviceName}</p>
               </div>
               <div>
-                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Cliente</label>
-                <p className="text-app-ink">{selectedSchedule.clientName || 'N/A'}</p>
+                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">{t.schedule.clientLabel}</label>
+                <p className="text-app-ink">{selectedSchedule.clientName || t.schedule.notAvailable}</p>
               </div>
               <div>
-                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Horário</label>
-                <p className="text-app-ink">{new Date(selectedSchedule.startDateTime).toLocaleString('pt-BR')}</p>
+                <label className="text-xs text-app-muted uppercase font-bold tracking-wider">{t.schedule.timeLabel}</label>
+                <p className="text-app-ink">{new Date(selectedSchedule.startDateTime).toLocaleString(t.common.dateFnsLocale)}</p>
               </div>
               {selectedSchedule.notes && (
                 <div>
-                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">Observações</label>
+                  <label className="text-xs text-app-muted uppercase font-bold tracking-wider">{t.schedule.notesLabel}</label>
                   <p className="text-app-ink">{selectedSchedule.notes}</p>
                 </div>
               )}
@@ -128,12 +129,12 @@ export default function SchedulePage() {
                 <div className="flex flex-col gap-2 pt-4 border-t border-app-border">
                   {isProvider && selectedSchedule.status === ScheduleStatus.PENDING && (
                     <Button onClick={() => handleStatusChange(ScheduleStatus.CONFIRMED)} isLoading={updatingStatus} className="w-full">
-                      Confirmar
+                      {t.schedule.confirm}
                     </Button>
                   )}
                   {isProvider && selectedSchedule.status === ScheduleStatus.CONFIRMED && (
                     <Button onClick={() => handleStatusChange(ScheduleStatus.COMPLETED)} isLoading={updatingStatus} className="w-full">
-                      Marcar como concluído
+                      {t.schedule.markCompleted}
                     </Button>
                   )}
                   {(isProvider || isClient) && (
@@ -143,7 +144,7 @@ export default function SchedulePage() {
                       isLoading={updatingStatus}
                       className="w-full"
                     >
-                      Cancelar agendamento
+                      {t.schedule.cancelSchedule}
                     </Button>
                   )}
                 </div>

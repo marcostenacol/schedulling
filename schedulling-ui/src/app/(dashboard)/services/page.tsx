@@ -9,8 +9,10 @@ import { ServiceCard } from '@/modules/service/components/ServiceCard';
 import { ServiceForm } from '@/modules/service/components/ServiceForm';
 import { Button } from '@/components/ui/Button';
 import { useProfileStore } from '@/modules/profile/store/profile.store';
+import { useLocale } from '@/i18n/LocaleContext';
 
 export default function ServicesPage() {
+  const { t } = useLocale();
   const router = useRouter();
   const profile = useProfileStore((state) => state.profile);
   const isProvider = profile?.type === 'provider' || profile?.type === 'admin';
@@ -57,7 +59,7 @@ export default function ServicesPage() {
   };
 
   const handleDelete = async (service: ServiceResponseDTO) => {
-    if (!window.confirm(`Excluir o serviço "${service.name}"? Ele deixará de aparecer no catálogo.`)) return;
+    if (!window.confirm(t.services.deleteConfirm(service.name))) return;
     try {
       await serviceApi.delete(service.id);
       fetchServices();
@@ -67,18 +69,18 @@ export default function ServicesPage() {
   };
 
   if (profile && !isProvider) return null;
-  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">Carregando serviços...</div>;
+  if (loading) return <div className="flex justify-center py-20 text-app-accent font-medium">{t.services.loading}</div>;
 
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">Meus Serviços</h1>
-          <p className="text-app-muted mt-1">Gerencie os tipos de serviços que você oferece aos seus clientes.</p>
+          <h1 className="text-3xl font-extrabold text-app-ink tracking-tight">{t.services.pageTitle}</h1>
+          <p className="text-app-muted mt-1">{t.services.pageSubtitle}</p>
         </div>
         <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
           <Plus className="h-5 w-5" />
-          Novo Serviço
+          {t.services.newService}
         </Button>
       </div>
 
@@ -98,9 +100,9 @@ export default function ServicesPage() {
           <div className="bg-app-surface-2 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <PackageSearch className="h-8 w-8 text-app-muted" />
           </div>
-          <h3 className="text-lg font-semibold text-app-ink">Nenhum serviço cadastrado</h3>
-          <p className="text-app-muted mb-6">Comece adicionando seu primeiro serviço para que os clientes possam agendar.</p>
-          <Button variant="secondary" onClick={() => setShowForm(true)}>Adicionar Serviço</Button>
+          <h3 className="text-lg font-semibold text-app-ink">{t.services.emptyTitle}</h3>
+          <p className="text-app-muted mb-6">{t.services.emptySubtitle}</p>
+          <Button variant="secondary" onClick={() => setShowForm(true)}>{t.services.emptyAction}</Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

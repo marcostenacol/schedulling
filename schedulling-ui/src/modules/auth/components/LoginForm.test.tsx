@@ -6,6 +6,7 @@ import { LoginForm } from './LoginForm';
 import { authApi } from '../api/auth.api';
 import { useAuthStore } from '../store/auth.store';
 import { TokenResponseDTO } from '../dtos/auth.dto';
+import { LocaleProvider } from '@/i18n/LocaleContext';
 
 const pushMock = vi.fn();
 
@@ -32,7 +33,11 @@ describe('LoginForm', () => {
     container.querySelector('input[type="password"]') as HTMLInputElement;
 
   it('renders email/password fields and submit button', () => {
-    const { container } = render(<LoginForm />);
+    const { container } = render(
+      <LocaleProvider>
+        <LoginForm />
+      </LocaleProvider>
+    );
 
     expect(getEmailInput(container)).toBeInTheDocument();
     expect(getPasswordInput(container)).toBeInTheDocument();
@@ -46,7 +51,11 @@ describe('LoginForm', () => {
       data: { accessToken: 'fake-token', refreshToken: 'fake-refresh' } as TokenResponseDTO,
     });
 
-    const { container } = render(<LoginForm />);
+    const { container } = render(
+      <LocaleProvider>
+        <LoginForm />
+      </LocaleProvider>
+    );
 
     await userEvent.type(getEmailInput(container), 'user@example.com');
     await userEvent.type(getPasswordInput(container), 'secret123');
@@ -63,7 +72,11 @@ describe('LoginForm', () => {
       response: { data: { message: 'Credenciais inválidas' } },
     });
 
-    const { container } = render(<LoginForm />);
+    const { container } = render(
+      <LocaleProvider>
+        <LoginForm />
+      </LocaleProvider>
+    );
 
     await userEvent.type(getEmailInput(container), 'user@example.com');
     await userEvent.type(getPasswordInput(container), 'wrongpass');

@@ -3,6 +3,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { AvailabilityResponseDTO } from '../dtos/availability.dto';
+import { useLocale } from '@/i18n/LocaleContext';
 
 interface AvailabilityGridProps {
   availabilities: AvailabilityResponseDTO[];
@@ -11,9 +12,9 @@ interface AvailabilityGridProps {
   onDeleteSlot: (id: string) => void;
 }
 
-const DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-
 export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabilities, onAddSlot, onAddSpecificSlot, onDeleteSlot }) => {
+  const { t } = useLocale();
+  const DAYS = t.availability.days;
   const recurring = availabilities.filter(a => !a.specificDate);
   const specific = availabilities
     .filter(a => a.specificDate)
@@ -29,7 +30,7 @@ export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabiliti
             <div key={index} className="bg-app-surface border border-app-border rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex flex-col">
                 <span className="font-bold text-app-ink">{dayName}</span>
-                <span className="text-xs text-app-muted">{slots.length} horários configurados</span>
+                <span className="text-xs text-app-muted">{t.availability.slotsConfigured(slots.length)}</span>
               </div>
 
               <div className="flex flex-wrap gap-2 flex-1 md:justify-center">
@@ -40,14 +41,14 @@ export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabiliti
                       <button
                         onClick={() => onDeleteSlot(slot.id)}
                         className="p-1 rounded-full hover:bg-app-accent/20 transition-colors"
-                        title="Remover horário"
+                        title={t.availability.removeSlot}
                       >
                         <X className="w-3 h-3" />
                       </button>
                     </div>
                   ))
                 ) : (
-                  <span className="text-sm text-app-muted italic">Fechado</span>
+                  <span className="text-sm text-app-muted italic">{t.availability.closed}</span>
                 )}
               </div>
 
@@ -55,7 +56,7 @@ export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabiliti
                 onClick={() => onAddSlot(index)}
                 className="text-sm font-semibold text-app-accent hover:bg-app-accent-soft px-3 py-1 rounded-md transition-colors"
               >
-                + Adicionar
+                {t.availability.addSlot}
               </button>
             </div>
           );
@@ -65,14 +66,14 @@ export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabiliti
       <div className="bg-app-surface border border-app-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <span className="font-bold text-app-ink">Horários avulsos</span>
-            <p className="text-xs text-app-muted">Disponibilidade extra, fora do padrão semanal, válida só numa data específica.</p>
+            <span className="font-bold text-app-ink">{t.availability.specificTitle}</span>
+            <p className="text-xs text-app-muted">{t.availability.specificSubtitle}</p>
           </div>
           <button
             onClick={onAddSpecificSlot}
             className="text-sm font-semibold text-app-accent hover:bg-app-accent-soft px-3 py-1 rounded-md transition-colors shrink-0"
           >
-            + Adicionar
+            {t.availability.addSlot}
           </button>
         </div>
 
@@ -91,7 +92,7 @@ export const AvailabilityGrid: React.FC<AvailabilityGridProps> = ({ availabiliti
               </div>
             ))
           ) : (
-            <span className="text-sm text-app-muted italic">Nenhum horário avulso cadastrado.</span>
+            <span className="text-sm text-app-muted italic">{t.availability.noSpecificSlots}</span>
           )}
         </div>
       </div>

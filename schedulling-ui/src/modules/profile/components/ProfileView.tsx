@@ -3,19 +3,20 @@ import Image from 'next/image';
 import { Copy, Check } from 'lucide-react';
 import { ProfileResponseDTO } from '../dtos/profile.dto';
 import { getAvatarUrl } from '@/shared/getAvatarUrl';
+import { useLocale } from '@/i18n/LocaleContext';
 
 interface ProfileViewProps {
   profile: ProfileResponseDTO;
   onEdit: () => void;
 }
 
-const TYPE_LABELS: Record<string, string> = {
-  provider: 'Prestador',
-  client: 'Cliente',
-  admin: 'Administrador',
-};
-
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => {
+  const { t } = useLocale();
+  const TYPE_LABELS: Record<string, string> = {
+    provider: t.profile.typeProvider,
+    client: t.profile.typeClient,
+    admin: t.profile.typeAdmin,
+  };
   const avatarUrl = getAvatarUrl(profile.avatar);
   const [copied, setCopied] = useState(false);
   const isProvider = profile.type === 'provider' || profile.type === 'admin';
@@ -51,7 +52,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
       {isProvider && (
         <div className="w-full mb-6">
           <h3 className="text-xs font-semibold text-app-muted uppercase mb-2 text-center">
-            Código de prestador (compartilhe com clientes)
+            {t.profile.providerCodeTitle}
           </h3>
           <button
             onClick={handleCopyCode}
@@ -65,7 +66,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
 
       {profile.bio && (
         <div className="w-full text-center mb-6">
-          <h3 className="text-sm font-semibold text-app-muted uppercase mb-2">Sobre mim</h3>
+          <h3 className="text-sm font-semibold text-app-muted uppercase mb-2">{t.profile.aboutMeTitle}</h3>
           <p className="text-app-muted italic">&ldquo;{profile.bio}&rdquo;</p>
         </div>
       )}
@@ -74,7 +75,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onEdit }) => 
         onClick={onEdit}
         className="w-full bg-app-accent text-app-accent-ink py-2 rounded-md hover:opacity-90 transition-colors"
       >
-        Editar Perfil
+        {t.profile.editAction}
       </button>
     </div>
   );

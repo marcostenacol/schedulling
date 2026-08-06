@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation';
 import { authApi } from '../api/auth.api';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useLocale } from '@/i18n/LocaleContext';
 
 export const RegisterForm = () => {
   const router = useRouter();
+  const { t } = useLocale();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -23,7 +25,7 @@ export const RegisterForm = () => {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem.');
+      setError(t.auth.passwordsDoNotMatch);
       return;
     }
 
@@ -32,12 +34,12 @@ export const RegisterForm = () => {
     try {
       const response = await authApi.register({ name, email, password, role });
       if (response.success) {
-        alert('Conta criada com sucesso! Faça login.');
+        alert(t.auth.accountCreated);
         router.push('/login');
       }
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao registrar.');
+      setError(axiosError.response?.data?.message || t.auth.registerError);
     } finally {
       setLoading(false);
     }
@@ -45,26 +47,26 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm">
-      <h2 className="text-2xl font-bold text-center text-app-ink">Criar nova conta</h2>
+      <h2 className="text-2xl font-bold text-center text-app-ink">{t.auth.registerTitle}</h2>
 
       {error && <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>}
 
       <Input
-        label="Nome completo"
+        label={t.auth.fullNameLabel}
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
       />
       <Input
         type="email"
-        label="E-mail"
+        label={t.auth.emailLabel}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
       />
       <Input
         type="password"
-        label="Senha"
+        label={t.auth.passwordLabel}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
@@ -72,26 +74,26 @@ export const RegisterForm = () => {
       />
       <Input
         type="password"
-        label="Confirmar senha"
+        label={t.auth.confirmPasswordLabel}
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
       />
 
       <div className="flex flex-col gap-1 w-full">
-        <label className="text-sm font-medium text-app-muted">Tipo de conta</label>
+        <label className="text-sm font-medium text-app-muted">{t.auth.accountTypeLabel}</label>
         <select
           className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent"
           value={role}
           onChange={(e) => setRole(e.target.value as 'ROLE_CLIENT' | 'ROLE_PROVIDER')}
         >
-          <option value="ROLE_CLIENT">Cliente</option>
-          <option value="ROLE_PROVIDER">Prestador de Serviço</option>
+          <option value="ROLE_CLIENT">{t.auth.roleClient}</option>
+          <option value="ROLE_PROVIDER">{t.auth.roleProvider}</option>
         </select>
       </div>
 
       <Button type="submit" isLoading={loading} className="mt-2">
-        Registrar
+        {t.auth.registerAction}
       </Button>
     </form>
   );

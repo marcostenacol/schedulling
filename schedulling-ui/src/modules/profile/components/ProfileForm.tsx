@@ -9,6 +9,7 @@ import { profileApi } from '../api/profile.api';
 import { getAvatarUrl } from '@/shared/getAvatarUrl';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useLocale } from '@/i18n/LocaleContext';
 
 interface ProfileFormProps {
   profile: ProfileResponseDTO;
@@ -18,6 +19,7 @@ interface ProfileFormProps {
 }
 
 export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, onCancel, onUpdate }) => {
+  const { t } = useLocale();
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio || '');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -57,7 +59,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
       onSuccess(updated);
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;
-      setError(axiosError.response?.data?.message || 'Erro ao atualizar perfil.');
+      setError(axiosError.response?.data?.message || t.profile.saveError);
     } finally {
       setLoading(false);
     }
@@ -65,7 +67,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
 
   return (
     <form onSubmit={handleSubmit} className="bg-app-surface border border-app-border shadow-app-card rounded-lg p-6 flex flex-col gap-4">
-      <h2 className="text-xl font-bold text-app-ink border-b border-app-border pb-2 mb-2">Editar Informações</h2>
+      <h2 className="text-xl font-bold text-app-ink border-b border-app-border pb-2 mb-2">{t.profile.editTitle}</h2>
 
       {error && <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>}
 
@@ -93,19 +95,19 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
           className="hidden"
         />
         <span className="text-xs text-app-muted">
-          {avatarFile ? 'Nova foto selecionada — salve para aplicar' : 'Clique na foto para trocar o avatar'}
+          {avatarFile ? t.profile.avatarSelected : t.profile.avatarHint}
         </span>
       </div>
 
       <Input
-        label="Nome Completo"
+        label={t.profile.fullNameLabel}
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
       />
 
       <div className="flex flex-col gap-1 w-full">
-        <label className="text-sm font-medium text-app-muted">Bio</label>
+        <label className="text-sm font-medium text-app-muted">{t.common.bioLabel}</label>
         <textarea
           className="px-3 py-2 border border-app-border rounded-md shadow-sm bg-app-surface-2 text-app-ink focus:outline-none focus:ring-2 focus:ring-app-accent h-24"
           value={bio}
@@ -115,10 +117,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSuccess, on
 
       <div className="flex gap-2 mt-2">
         <Button type="submit" isLoading={loading} className="flex-1">
-          Salvar Alterações
+          {t.common.saveChanges}
         </Button>
         <Button type="button" variant="secondary" onClick={onCancel} disabled={loading}>
-          Cancelar
+          {t.common.cancel}
         </Button>
       </div>
     </form>

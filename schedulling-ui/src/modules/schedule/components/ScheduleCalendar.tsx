@@ -7,9 +7,12 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt-BR';
+import enUS from 'date-fns/locale/en-US';
+import esLocale from 'date-fns/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { ScheduleResponseDTO, ScheduleStatus } from '../dtos/schedule.dto';
 import { CalendarToolbar } from './CalendarToolbar';
+import { useLocale } from '@/i18n/LocaleContext';
 
 const STATUS_COLOR: Record<ScheduleStatus, string> = {
   [ScheduleStatus.PENDING]: '#B87A16',
@@ -18,15 +21,10 @@ const STATUS_COLOR: Record<ScheduleStatus, string> = {
   [ScheduleStatus.COMPLETED]: '#4E6B3A',
 };
 
-const STATUS_LABEL: Record<ScheduleStatus, string> = {
-  [ScheduleStatus.PENDING]: 'Pendente',
-  [ScheduleStatus.CONFIRMED]: 'Confirmado',
-  [ScheduleStatus.CANCELLED]: 'Cancelado',
-  [ScheduleStatus.COMPLETED]: 'Concluído',
-};
-
 const locales = {
   'pt-BR': ptBR,
+  'en-US': enUS,
+  es: esLocale,
 };
 
 const localizer = dateFnsLocalizer({
@@ -57,9 +55,18 @@ interface ScheduleCalendarProps {
 }
 
 export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, onSelectEvent, onSelectSlot }) => {
+  const { t } = useLocale();
+
+  const statusLabels: Record<ScheduleStatus, string> = {
+    [ScheduleStatus.PENDING]: t.schedule.statusPending,
+    [ScheduleStatus.CONFIRMED]: t.schedule.statusConfirmed,
+    [ScheduleStatus.CANCELLED]: t.schedule.statusCancelled,
+    [ScheduleStatus.COMPLETED]: t.schedule.statusCompleted,
+  };
+
   const events: CalendarEvent[] = schedules.map(s => ({
     id: s.id,
-    title: `${s.serviceName} - ${s.clientName || 'Cliente'}`,
+    title: `${s.serviceName} - ${s.clientName || t.calendar.defaultClient}`,
     start: new Date(s.startDateTime),
     end: new Date(s.endDateTime),
     resource: s
@@ -76,21 +83,21 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
         events={events}
         startAccessor="start"
         endAccessor="end"
-        culture="pt-BR"
+        culture={t.common.dateFnsLocale}
         messages={{
-          next: "Próximo",
-          previous: "Anterior",
-          today: "Hoje",
-          month: "Mês",
-          week: "Semana",
-          day: "Dia",
-          agenda: "Agenda",
-          date: "Data",
-          time: "Horário",
-          event: "Evento",
-          allDay: "Dia inteiro",
-          noEventsInRange: "Nenhum agendamento neste período.",
-          showMore: (total) => `+ ${total} mais`
+          next: t.calendar.next,
+          previous: t.calendar.previous,
+          today: t.calendar.today,
+          month: t.calendar.month,
+          week: t.calendar.week,
+          day: t.calendar.day,
+          agenda: t.calendar.agenda,
+          date: t.calendar.date,
+          time: t.calendar.time,
+          event: t.calendar.event,
+          allDay: t.calendar.allDay,
+          noEventsInRange: t.calendar.noEventsInRange,
+          showMore: (total) => t.calendar.showMore(total),
         }}
         onSelectEvent={onSelectEvent}
         selectable={Boolean(onSelectSlot)}
@@ -115,12 +122,12 @@ export const ScheduleCalendar: React.FC<ScheduleCalendarProps> = ({ schedules, o
                   style={{ backgroundColor: STATUS_COLOR[event.resource.status] }}
                 />
                 <span className="font-semibold text-app-ink">{event.resource.serviceName}</span>
-                <span className="text-app-muted">— {event.resource.clientName || 'Cliente'}</span>
+                <span className="text-app-muted">— {event.resource.clientName || t.calendar.defaultClient}</span>
                 <span
                   className="nb-stamp ml-auto shrink-0"
                   style={{ backgroundColor: `${STATUS_COLOR[event.resource.status]}1f`, color: STATUS_COLOR[event.resource.status] }}
                 >
-                  {STATUS_LABEL[event.resource.status]}
+                  {statusLabels[event.resource.status]}
                 </span>
               </div>
             ),

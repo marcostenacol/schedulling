@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ScheduleCalendar } from './ScheduleCalendar';
 import { ScheduleResponseDTO, ScheduleStatus } from '../dtos/schedule.dto';
+import { LocaleProvider } from '@/i18n/LocaleContext';
 
 // react-big-calendar reads layout APIs jsdom doesn't implement; stub the
 // minimal set it needs so the component can mount without a real browser.
@@ -38,13 +39,21 @@ const schedule: ScheduleResponseDTO = {
 
 describe('ScheduleCalendar', () => {
   it('renders the calendar with an event built from the given schedule', () => {
-    render(<ScheduleCalendar schedules={[schedule]} onSelectEvent={vi.fn()} />);
+    render(
+      <LocaleProvider>
+        <ScheduleCalendar schedules={[schedule]} onSelectEvent={vi.fn()} />
+      </LocaleProvider>
+    );
 
     expect(screen.getByText('Corte de cabelo')).toBeInTheDocument();
   });
 
   it('renders an empty calendar without crashing when there are no schedules', () => {
-    render(<ScheduleCalendar schedules={[]} onSelectEvent={vi.fn()} />);
+    render(
+      <LocaleProvider>
+        <ScheduleCalendar schedules={[]} onSelectEvent={vi.fn()} />
+      </LocaleProvider>
+    );
 
     expect(screen.queryByText('Corte de cabelo')).not.toBeInTheDocument();
   });
