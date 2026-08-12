@@ -21,13 +21,24 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      timeout: 5000
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  # Não corta uma request síncrona já em execução (Controllers deste projeto retornam
+  # ApiResponse<T> direto, sem DeferredResult/Callable) — só afeta requests assíncronas reais.
+  # Mantido como rede de segurança adicional, mas o corte de fato de uma thread travada em
+  # loop (ver bug de GetAvailableSlotsService) depende do server.tomcat.connection-timeout abaixo
+  # e, por padrão, é aceito como limitação conhecida sem reverse-proxy com read-timeout na frente.
+  mvc:
+    async:
+      request-timeout: 30000
 
 server:
   port: 8080
+  tomcat:
+    connection-timeout: 20000
 
 app:
   uploads-dir: ${UPLOADS_DIR:uploads}

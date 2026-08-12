@@ -5,6 +5,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -25,7 +26,11 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, { refreshToken });
+    const response = await axios.post(
+      `${API_BASE_URL}/api/v1/auth/refresh`,
+      { refreshToken },
+      { timeout: 15000 }
+    );
     const { accessToken, refreshToken: newRefreshToken } = response.data.data;
     useAuthStore.getState().setTokens(accessToken, newRefreshToken);
     return accessToken;
