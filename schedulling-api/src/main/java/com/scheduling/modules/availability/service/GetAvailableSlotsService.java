@@ -50,15 +50,27 @@ public class GetAvailableSlotsService
     LinkedHashSet<LocalTime> availableSlots = new LinkedHashSet<>();
     int duration = service.getDurationMinutes();
 
+    if (duration <= 0) {
+      throw new AppException("Duração do serviço inválida", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     for (Availability avail : availabilities) {
       boolean isRecurringMatch =
           avail.getSpecificDate() == null && avail.getDayOfWeek() == adjustedDay;
       boolean isSpecificMatch = input.getDate().equals(avail.getSpecificDate());
 
       if (isRecurringMatch || isSpecificMatch) {
-        LocalTime current = avail.getStartTime();
-        while (current.plusMinutes(duration).isBefore(avail.getEndTime())
-            || current.plusMinutes(duration).equals(avail.getEndTime())) {
+        // Aritmética em minutos-desde-meia-noite, não em LocalTime: LocalTime.plusMinutes()
+        // não tem componente de dia e "vira" (wrap) na virada da meia-noite — com endTime
+        // próximo de 23:xx, o current wrapado volta a ficar "isBefore" do endTime e o loop
+        // nunca termina, mesmo com duration > 0 (ex.: startTime=00:00, endTime=23:30, duration=30).
+        int startMinutes = avail.getStartTime().toSecondOfDay() / 60;
+        int endMinutes = avail.getEndTime().toSecondOfDay() / 60;
+
+        for (int currentMinutes = startMinutes;
+            currentMinutes + duration <= endMinutes;
+            currentMinutes += duration) {
+          LocalTime current = LocalTime.ofSecondOfDay((long) currentMinutes * 60);
           LocalDateTime slotStart = input.getDate().atTime(current);
           LocalDateTime slotEnd = slotStart.plusMinutes(duration);
 
@@ -66,8 +78,6 @@ public class GetAvailableSlotsService
               && !isAlreadyScheduled(input.getProviderId(), slotStart, slotEnd)) {
             availableSlots.add(current);
           }
-
-          current = current.plusMinutes(duration);
         }
       }
     }
