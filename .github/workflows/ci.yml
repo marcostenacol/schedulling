@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [development, production]
   pull_request:
-    branches: [main]
+    branches: [development, production]
 
 jobs:
   api:
@@ -23,7 +23,7 @@ jobs:
           cache: 'maven'
 
       - name: Build and test
-        run: mvn -B verify
+        run: ./mvnw -B verify
 
   ui:
     name: UI (lint + build)
