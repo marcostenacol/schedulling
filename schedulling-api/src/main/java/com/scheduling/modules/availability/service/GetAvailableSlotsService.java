@@ -16,13 +16,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class GetAvailableSlotsService
-    implements BaseService<GetAvailableSlotsRequest, List<LocalTime>> {
+    implements BaseService<GetAvailableSlotsRequest, Page<LocalTime>> {
 
   private final AvailabilityRepository availabilityRepository;
   private final AvailabilityBlockRepository blockRepository;
@@ -30,7 +33,7 @@ public class GetAvailableSlotsService
   private final ServiceOfferedRepository serviceRepository;
 
   @Override
-  public List<LocalTime> execute(GetAvailableSlotsRequest input) {
+  public Page<LocalTime> execute(GetAvailableSlotsRequest input) {
     ServiceOffered service =
         serviceRepository
             .findById(input.getServiceId())
@@ -72,7 +75,21 @@ public class GetAvailableSlotsService
       }
     }
 
-    return new ArrayList<>(availableSlots);
+    return paginate(new ArrayList<>(availableSlots), input.getPageable());
+  }
+
+  /**
+   * Os slots são calculados inteiramente em memória (não vêm de uma query paginável no banco) —
+   * pagina-se a lista já materializada para manter o mesmo contrato {@code Page<T>} exposto pelos
+   * demais endpoints de listagem (ver ServiceController/ScheduleController).
+   */
+  private Page<LocalTime> paginate(List<LocalTime> slots, Pageable pageable) {
+    int start = (int) pageable.getOffset();
+    if (start >= slots.size()) {
+      return new PageImpl<>(List.of(), pageable, slots.size());
+    }
+    int end = Math.min(start + pageable.getPageSize(), slots.size());
+    return new PageImpl<>(slots.subList(start, end), pageable, slots.size());
   }
 
   private boolean isBlocked(java.util.UUID providerId, LocalDateTime start, LocalDateTime end) {

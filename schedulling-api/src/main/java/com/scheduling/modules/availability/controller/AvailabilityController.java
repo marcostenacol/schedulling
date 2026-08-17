@@ -18,6 +18,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -69,12 +72,14 @@ public class AvailabilityController extends BaseController {
   }
 
   @GetMapping("/slots")
-  public ResponseEntity<ApiResponse<List<LocalTime>>> getSlots(
+  public ResponseEntity<ApiResponse<Page<LocalTime>>> getSlots(
       @RequestParam UUID providerId,
       @RequestParam UUID serviceId,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-    List<LocalTime> response =
-        getAvailableSlotsService.execute(new GetAvailableSlotsRequest(providerId, serviceId, date));
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+      @PageableDefault(size = 20) Pageable pageable) {
+    Page<LocalTime> response =
+        getAvailableSlotsService.execute(
+            new GetAvailableSlotsRequest(providerId, serviceId, date, pageable));
     return success("Slots disponíveis recuperados", response);
   }
 }

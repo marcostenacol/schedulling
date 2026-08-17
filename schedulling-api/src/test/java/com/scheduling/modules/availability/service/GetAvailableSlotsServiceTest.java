@@ -24,6 +24,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class GetAvailableSlotsServiceTest {
@@ -38,6 +40,7 @@ class GetAvailableSlotsServiceTest {
   private UUID providerId;
   private UUID serviceId;
   private ServiceOffered service;
+  private final Pageable pageable = PageRequest.of(0, 20);
 
   @BeforeEach
   void setUp() {
@@ -72,7 +75,9 @@ class GetAvailableSlotsServiceTest {
         .thenReturn(Collections.emptyList());
 
     List<LocalTime> slots =
-        getAvailableSlotsService.execute(new GetAvailableSlotsRequest(providerId, serviceId, date));
+        getAvailableSlotsService
+            .execute(new GetAvailableSlotsRequest(providerId, serviceId, date, pageable))
+            .getContent();
 
     assertEquals(2, slots.size()); // 09:00 e 09:30
     assertTrue(slots.contains(LocalTime.of(9, 0)));
@@ -109,7 +114,9 @@ class GetAvailableSlotsServiceTest {
         .thenReturn(Collections.emptyList());
 
     List<LocalTime> slots =
-        getAvailableSlotsService.execute(new GetAvailableSlotsRequest(providerId, serviceId, date));
+        getAvailableSlotsService
+            .execute(new GetAvailableSlotsRequest(providerId, serviceId, date, pageable))
+            .getContent();
 
     assertEquals(1, slots.size());
     assertEquals(LocalTime.of(9, 0), slots.get(0));
@@ -140,7 +147,9 @@ class GetAvailableSlotsServiceTest {
         .thenReturn(Collections.emptyList());
 
     List<LocalTime> slots =
-        getAvailableSlotsService.execute(new GetAvailableSlotsRequest(providerId, serviceId, date));
+        getAvailableSlotsService
+            .execute(new GetAvailableSlotsRequest(providerId, serviceId, date, pageable))
+            .getContent();
 
     assertEquals(1, slots.size());
     assertEquals(LocalTime.of(9, 30), slots.get(0));
