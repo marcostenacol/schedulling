@@ -40,7 +40,7 @@ public class RegisterService implements BaseService<RegisterDTO, Void> {
 
     if (userRepository.existsByEmail(input.getEmail())) {
       log.warn("Tentativa de registro com email já cadastrado: {}", input.getEmail());
-      throw new AppException("Email já cadastrado no sistema", HttpStatus.BAD_REQUEST);
+      throw new AppException("Não foi possível concluir o cadastro", HttpStatus.BAD_REQUEST);
     }
 
     Role role =

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class UpdateAvatarService implements BaseService<UpdateAvatarRequest, ProfileResponseDTO> {
 
-  private static final List<String> ALLOWED_CONTENT_TYPES =
-      List.of("image/jpeg", "image/png", "image/webp", "image/gif");
+  private static final Map<String, String> ALLOWED_CONTENT_TYPES_EXTENSIONS =
+      Map.of(
+          "image/jpeg", ".jpg",
+          "image/png", ".png",
+          "image/webp", ".webp",
+          "image/gif", ".gif");
 
   private final ProfileRepository profileRepository;
 
@@ -69,25 +73,26 @@ public class UpdateAvatarService implements BaseService<UpdateAvatarRequest, Pro
       throw new AppException("Nenhum arquivo enviado", HttpStatus.BAD_REQUEST);
     }
 
-    if (!ALLOWED_CONTENT_TYPES.contains(file.getContentType())) {
+    if (!ALLOWED_CONTENT_TYPES_EXTENSIONS.containsKey(file.getContentType())) {
       throw new AppException(
           "Formato de imagem inválido. Use JPEG, PNG, WEBP ou GIF", HttpStatus.BAD_REQUEST);
     }
   }
 
   private String storeFile(MultipartFile file) {
-    String originalFilename = file.getOriginalFilename();
-    String extension =
-        originalFilename != null && originalFilename.contains(".")
-            ? originalFilename.substring(originalFilename.lastIndexOf('.'))
-            : "";
+    String extension = ALLOWED_CONTENT_TYPES_EXTENSIONS.get(file.getContentType());
     String filename = UUID.randomUUID() + extension;
 
     try {
-      Path avatarsDir = Path.of(uploadsDir, "avatars");
+      Path avatarsDir = Path.of(uploadsDir, "avatars").normalize();
       Files.createDirectories(avatarsDir);
-      Files.copy(
-          file.getInputStream(), avatarsDir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+
+      Path destination = avatarsDir.resolve(filename).normalize();
+      if (!destination.startsWith(avatarsDir)) {
+        throw new AppException("Nome de arquivo inválido", HttpStatus.BAD_REQUEST);
+      }
+
+      Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       log.error("Falha ao salvar arquivo de avatar", e);
       throw new AppException("Falha ao salvar avatar", HttpStatus.INTERNAL_SERVER_ERROR);

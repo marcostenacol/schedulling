@@ -13,3 +13,8 @@ npm-debug.log*
 # Java / Maven
 target/
 .worktrees/
+
+# Segredos
+.env
+schedulling-api/.env
+schedulling-ui/.env

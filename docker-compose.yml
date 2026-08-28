@@ -38,7 +38,7 @@ services:
       DB_PORT: ${DB_PORT:-5432}
       DB_NAME: ${DB_NAME:-scheduling_db}
       DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-central_password}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must be set}
       REDIS_HOST: ${REDIS_HOST:-cache-scheduling}
       REDIS_PORT: ${REDIS_PORT:-6379}
       JWT_SECRET: ${JWT_SECRET}
@@ -81,7 +81,7 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME_HOMOLOG:-scheduling_db}
       POSTGRES_USER: ${DB_USER_HOMOLOG:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD_HOMOLOG:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_HOMOLOG:?DB_PASSWORD_HOMOLOG must be set}
     ports:
       - "127.0.0.1:${DB_PORT_HOMOLOG:-5435}:5432"
     healthcheck:
